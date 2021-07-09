@@ -1,0 +1,3 @@
+
+class Status:
+    alive:  bool
