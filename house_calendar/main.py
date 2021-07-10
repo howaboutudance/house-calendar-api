@@ -1,33 +1,33 @@
-from typing import Optional, Text
-from datetime import datetime
 from fastapi import FastAPI
-from pydantic import BaseModel
 from fastapi.responses import JSONResponse
-from .health import Status
+from .routers.health import Status
+from .items import Event
+import house_calendar
+import datetime
+
 app = FastAPI()
-
-class Location(BaseModel):
-    name: Text
-
-class Event(BaseModel):
-    name: Text
-    start_date: datetime
-    end_date: datetime
-    location: Location
 
 
 @app.post("/events/")
-def add_event(event: Event) -> JSONResponse:
-    return JSONResponse({"message":"ok", "id": 0})
+async def add_event(event: Event) -> JSONResponse:
+    return {"instance": event, "id": 1}
 
 @app.get("/events/{id}")
-def get_event(id: int) -> JSONResponse:
-    return JSONResponse({"message": "ok"})
+async def get_event(id: int) -> JSONResponse:
+    return {"message": "ok"}
 
 @app.get("/events")
-def get_event_list() -> JSONResponse:
-    return JSONResponse([{"event": 1, "name": "hello"}])
+async def get_event_list() -> JSONResponse:
+    return [{"event": 1, "name": "hello"}]
+
+@app.get("/pulse")
+async def get_pulse() -> JSONResponse:
+    return "OK" 
 
 @app.get("/status")
-def get_status() -> JSONResponse:
-    return JSONResponse({"message": "fail"})
+async def get_status() -> JSONResponse:
+    content = {
+        "name": f"House Music Calendar API",
+        "local_time": f"{datetime.datetime.now()}"
+    }
+    return JSONResponse(content)

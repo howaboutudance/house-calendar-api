@@ -1,11 +1,12 @@
-SAMPLE_TAG = sks/pytemplate-docker
-SAMPLE_INTERACT = sks/pytemplate-interact
-SAMPLE_TEST = sks/pytemplate-test
+SAMPLE_TAG = hematite/pytemplate-docker
+SAMPLE_INTERACT = hematite/pytemplate-interact
+SAMPLE_TEST = hematite/pytemplate-test
 DOCKER_BUILD=docker build ./ -f Dockerfile.sample
 DOCKER_RUN=docker run
 VENV_VERSION_FOLDER := venv$(shell python3 --version | sed -ne 's/[^0-9]*\(\([0-9]\.\)\{0,2\}\).*/\1/p' | sed -e "s/\.//g")
 
 init-env: FORCE
+	pyenv local 3.9.6 3.7.11 3.8.11
 	python3 -m venv ./$(VENV_VERSION_FOLDER)
 	( \
 		source ./$(VENV_VERSION_FOLDER)/bin/activate; \

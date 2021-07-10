@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="house-calandar", # Replace with your own username
+    name="house-calendar", # Replace with your own username
     version="0.0.1",
     author="Micahel Penhallegon",
     author_email="mike@hematite.tech",

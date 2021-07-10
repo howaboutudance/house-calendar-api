@@ -1,8 +1,13 @@
 import pytest
-from guestbook import api
+from house_calendar.main import app
+from fastapi.testclient import TestClient
 
-def test_helloworld():
-  assert sample.helloworld() == "Hello World"
+client = TestClient(app)
 
-def test_helloworld_name():
-  assert sample.helloworld(name="Flargen") == "Hello Flargen"
+def test_pulse():
+  resp = client.get("/pulse")
+  assert resp.status_code == 200
+
+@pytest.mark.intergration
+def test_status():
+    assert True
