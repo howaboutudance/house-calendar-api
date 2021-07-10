@@ -1,4 +1,4 @@
-BASE_TAG = hematite/house_church_api
+BASE_TAG = hematite/house_calendar_api
 TEST_TAG = ${BASE_TAG}-test
 DOCKER_BUILD=docker build ./ -f Dockerfile
 DOCKER_RUN=docker run
