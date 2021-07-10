@@ -1,29 +1,22 @@
 FROM python:3.9 as source 
-WORKDIR app
+WORKDIR /app
 COPY ./requirements.txt ./
 COPY ./setup.py ./ README.md ./
 RUN pip3 install -r requirements.txt
-COPY ./sample_module/. ./sample_module
+COPY ./house_calendar/. ./house_calendar
 
 FROM source as test
 COPY ./test ./test
 COPY ./tox.ini ./ ./requirements-dev.txt ./
 RUN pip3 install -r requirements-dev.txt
-CMD tox -e py38 && mypy sample_module/
+CMD tox -e py38 && mypy house_calendar/
 
 FROM source as builder
 RUN pip3 install wheel
 RUN python setup.py bdist_wheel
 
-FROM python:3.9 as interact
-COPY --from=builder /app/dist ./app/dist
-WORKDIR app
-COPY ./requirements-interact.txt ./
-RUN pip3 install -r requirements-interact.txt && pip3 install dist/example_pkg_mpenhallegon*
-CMD jupyter console
-
 FROM python:3.9-slim as app
 COPY --from=builder /app/dist ./app/dist
-WORKDIR app
-RUN pip3 install dist/example_pkg_mpenhallegon*
-CMD python -m sample_module
+WORKDIR /app
+RUN pip3 install dist/house_calendar*
+CMD python -m house_calendar

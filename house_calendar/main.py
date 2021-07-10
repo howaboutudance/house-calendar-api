@@ -1,33 +1,34 @@
-from fastapi import FastAPI
+from starlette.responses import RedirectResponse
+from house_calendar.routers import events
+from fastapi import Depends, FastAPI
 from fastapi.responses import JSONResponse
-from .routers.health import Status
-from .items import Event
-import house_calendar
-import datetime
+from .config import HOUSE_CALENDAR_VERSION
+from .datastore import events_db, locations_db
+from .dependencies import ListParameters
+from .routers import health, events
 
-app = FastAPI()
+app = FastAPI(title="House Music Calendar", version=HOUSE_CALENDAR_VERSION)
+app.include_router(health.router)
+app.include_router(events.router)
 
+@app.get("/locations/", tags=["location"])
+async def get_location_list(
+    list_parameters: ListParameters = Depends(ListParameters)) -> JSONResponse:
+    resp = [{
+        **location, 
+        "events": [
+            {
+                "name": event["name"],
+                "start_date": event["start_date"],
+                "end_date": event["end_date"],
+                "id": event["id"]
+            } for event in events_db
+            if event["location"]["name"] == location["name"]
+            ]}
+        for location in locations_db
+    ][list_parameters.offset:list_parameters.limit]
+    return JSONResponse(resp)
 
-@app.post("/events/")
-async def add_event(event: Event) -> JSONResponse:
-    return {"instance": event, "id": 1}
-
-@app.get("/events/{id}")
-async def get_event(id: int) -> JSONResponse:
-    return {"message": "ok"}
-
-@app.get("/events")
-async def get_event_list() -> JSONResponse:
-    return [{"event": 1, "name": "hello"}]
-
-@app.get("/pulse")
-async def get_pulse() -> JSONResponse:
-    return "OK" 
-
-@app.get("/status")
-async def get_status() -> JSONResponse:
-    content = {
-        "name": f"House Music Calendar API",
-        "local_time": f"{datetime.datetime.now()}"
-    }
-    return JSONResponse(content)
+@app.get("/")
+def redirect_docs():
+    return RedirectResponse("/docs")
