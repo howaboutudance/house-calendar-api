@@ -1,5 +1,22 @@
-from typing import Text
+from typing import MutableMapping, Text, List
 from datetime import datetime
+from pymongo import MongoClient
+from .items import Event
+from .util import JSONType
+
+DB = "house-calendar"
+EVENT_COLLECTION = "events"
+
+def get_events(event: Event) -> List[MutableMapping[Text, JSONType]]:
+    with MongoClient() as client:
+        event_collection = client[DB][EVENT_COLLECTION]
+        return event_collection
+
+def add_event(event: Event):
+    return {"status": "OK"}
+
+def delete_event(event: Event):
+    return {"status": "OK"}
 
 def incrementable_id():
     id = 0

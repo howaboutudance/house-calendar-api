@@ -1,5 +1,7 @@
 pytest
+pytest-cov
 tox
 mypy
 wheel
 setuptools
+safety

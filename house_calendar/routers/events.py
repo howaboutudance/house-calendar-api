@@ -1,11 +1,11 @@
 
 from typing import List
-from fastapi import Depends, FastAPI
+from fastapi import Depends
 from fastapi.param_functions import Path
 from fastapi.responses import JSONResponse
 from ..datastore import events_db
 from ..dependencies import ListParameters
-from ..items import Event, ExistingEvent
+from ..items import Event
 from fastapi import APIRouter
 
 router = APIRouter(prefix="/events", tags=["events"])
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/events", tags=["events"])
 async def add_event(event: Event):
     return {"instance": event, "id": 1}
 
-@router.get("/{id}", response_model=ExistingEvent)
+@router.get("/{id}", response_model=Event)
 async def get_event(id: int) -> JSONResponse:
     results = [event for event in events_db if event["id"] == id]
     if len(results):
@@ -37,15 +37,22 @@ async def delete_event(
         return JSONResponse({"message": f"{id} not found"}, status_code=404)
 
 
-@router.get("/", response_model=List[ExistingEvent])
+@router.get("/", response_model=List[Event])
 async def get_event_list(
     list_parameters: ListParameters= Depends(ListParameters))-> JSONResponse:
     """
     Get Events List (with querying)
     """
-    filter_keys = ["name", "start_date", "end_date", "id"]
+    filter_keys = ["name", "start_date", "end_date", "id", "location"]
+
+    def filter_location(k, v):
+        if k != "location":
+            return v
+        else:
+            return {loc_k: loc_v for (loc_k, loc_v) in v.items() if loc_k == "name"}
+
     resp = [
-        {key:value
+        {key:filter_location(key, value)
             for (key, value) 
             in event.items() 
             if key in filter_keys

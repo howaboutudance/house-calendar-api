@@ -19,4 +19,5 @@ FROM python:3.9-slim as app
 COPY --from=builder /app/dist ./app/dist
 WORKDIR /app
 RUN pip3 install dist/house_calendar*
+ENV HOST_SERVER 0.0.0.0
 CMD python -m house_calendar

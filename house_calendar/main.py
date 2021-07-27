@@ -2,15 +2,22 @@ from starlette.responses import RedirectResponse
 from house_calendar.routers import events
 from fastapi import Depends, FastAPI
 from fastapi.responses import JSONResponse
-from .config import HOUSE_CALENDAR_VERSION
-from .datastore import events_db, locations_db
+from fastapi.middleware.cors import CORSMiddleware
+from .config import HOUSE_CALENDAR_VERSION, ORIGINS
+from .datastore import locations_db, events_db
 from .dependencies import ListParameters
 from .routers import health, events
 
 app = FastAPI(title="House Music Calendar", version=HOUSE_CALENDAR_VERSION)
 app.include_router(health.router)
 app.include_router(events.router)
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 @app.get("/locations/", tags=["location"])
 async def get_location_list(
     list_parameters: ListParameters = Depends(ListParameters)) -> JSONResponse:
