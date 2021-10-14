@@ -1,5 +1,2 @@
 fastapi
-requests
 uvicorn[standard]
-motor
-python-dateutil

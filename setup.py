@@ -22,7 +22,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         "fastapi",
-        "uvicorn"
+        "uvicorn",
     ],
     python_requires='>=3.6',
 )
