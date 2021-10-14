@@ -17,7 +17,7 @@ build: FORCE
 	${DOCKER_BUILD} --no-cache=true --target=app -t ${BASE_TAG}
 
 run:
-	${DOCKER_RUN} ${BASE_TAG}
+	${DOCKER_RUN} -p 8000:8000 ${BASE_TAG}
 
 test: FORCE
 	${DOCKER_BUILD} --target=test -t ${INTERACT_TAG}
