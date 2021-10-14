@@ -1,35 +1,36 @@
 from typing import Optional, Text
-from datetime import date, datetime, timedelta
-from dateutil.relativedelta import *
-from pydantic import BaseModel
+from datetime import datetime, timedelta
+from pydantic import BaseModel, validator
 from pydantic.fields import Field
 from .config import HOUSE_CALENDAR_VERSION, START_TIME, help_get_version
-from fastapi import FastAPI, __version__ as fastapi_version
+from fastapi import __version__ as fastapi_version
 from uvicorn import __version__ as uvicorn_version
 import sys
 from enum import Enum
-
 
 class Location(BaseModel):
     name: Text = Field(..., max_length=200)
     address: Text
 
-
 class BaseEvent(BaseModel):
-    event_type: str
     name: Text = Field(..., max_length=300)
+    start_date: datetime = Field(None, description="Start time and date of the event")
+    end_date: datetime = Field(None, description="End time and date of the event")
+    duration: timedelta = Field(None, description="Duration (in seconds)")
     location: Location
+    repeat_start_date: Optional[datetime]
     id: Optional[int]
+    @validator('duration', pre=True, always=True)
+    def default_duration(cls, v, *, values, **kwargs):
+        return v or values['end_date'] - values['start_date']
 
 class Event(BaseEvent):
-    event_type: str = "special"
     start_date: datetime = Field( 
         default=datetime.now(),
         description="Start time and date of the event")
-    end_date: datetime = Field(
-        default=datetime.now(),
-        description="End time/date of the event"
-    )
+    @validator('end_date', pre=True, always=True)
+    def default_end_date(cls, v, *, values, **kwargs):
+        return v or values['start_date'] + values["duration"]
 
 class Status(BaseModel):
     alive:  Optional[bool] = Field(True)

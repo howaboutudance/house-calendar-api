@@ -1,4 +1,4 @@
-from typing import MutableMapping, Text, List
+from typing import Callable, MutableMapping, Text, List
 from datetime import datetime
 from .items import Event
 from .util import JSONType
@@ -8,7 +8,7 @@ EVENT_COLLECTION = "events"
 def get_events(event: Event) -> List[MutableMapping[Text, JSONType]]:
         return [] 
 
-def incrementable_id():
+def incrementable_id() -> Callable[[], int]:
     id = 0
     def increment() -> int:
         nonlocal id
@@ -16,7 +16,7 @@ def incrementable_id():
         return id
     return increment
 
-def create_iso_date(*args: ...) -> Text:
+def create_iso_date(*args) -> Text:
     return datetime(*args).isoformat()
 
 inc_location_id = incrementable_id()
@@ -60,10 +60,4 @@ events_db = [
     "end_date": create_iso_date(2021, 7, 11, 4), "location": monkey_loft}
 ]
 
-def add_event_dao(event: Event):
-    id = inc_event_id()
-    events_db.append({**events, "id": id})
-    return {"status": "OK", "id": id}
 
-def delete_event(event: Event):
-    return {"status": "OK"}

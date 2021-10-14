@@ -18,13 +18,14 @@ async def add_event(event: BaseEvent):
 async def get_event(id: int) -> JSONResponse:
     results = [event for event in events_db if event["id"] == id]
     if len(results):
-        return JSONResponse(results[0])
+        resp = JSONResponse(results[0])
     else:
-        return JSONResponse({}, status_code=404)
+        resp = JSONResponse({}, status_code=404)
+    return resp
 
 @router.delete("/{id}")
 async def delete_event(
-    id: int = Path(..., title="ID of the event", ge=0)) -> JSONResponse:
+    id: int = Path(..., title="ID of the event", ge=0)):
     if id in [event["id"] for event in events_db]:
         try:
             event_index = [event["id"] for event in events_db].index(id)
