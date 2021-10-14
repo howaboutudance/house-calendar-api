@@ -1,18 +1,18 @@
-
 from typing import List
 from fastapi import Depends
 from fastapi.param_functions import Path
 from fastapi.responses import JSONResponse
-from ..datastore import events_db
+from .events_dao import events_db, add_event_dao
 from ..dependencies import ListParameters
-from ..items import Event
+from ..items import Event, BaseEvent
 from fastapi import APIRouter
 
 router = APIRouter(prefix="/events", tags=["events"])
 
 @router.post("/")
-async def add_event(event: Event):
-    return {"instance": event, "id": 1}
+async def add_event(event: BaseEvent):
+    instance = add_event_dao(event)
+    return JSONResponse({"instance": instance, "id": 1})
 
 @router.get("/{id}", response_model=Event)
 async def get_event(id: int) -> JSONResponse:
@@ -44,7 +44,7 @@ async def get_event_list(
     Get Events List (with querying)
     """
     filter_keys = ["name", "start_date", "end_date", "id", "location"]
-
+    # an inner function to make the resp query a little clearer
     def filter_location(k, v):
         if k != "location":
             return v

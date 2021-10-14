@@ -1,5 +1,5 @@
 from ..items import Status
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from fastapi.responses import PlainTextResponse, JSONResponse
 
 router = APIRouter(tags=["health"])
@@ -11,3 +11,8 @@ async def get_pulse() -> PlainTextResponse:
 @router.get("/status")
 async def get_status() -> Status:
     return Status()
+
+@router.get("/metrics")
+async def get_metrics(request: Request) -> JSONResponse:
+    return JSONResponse({"status": "ok", 
+    "client": {'address': request.client}})
