@@ -5,4 +5,4 @@ if "HOST_SERVER" in os.environ:
 else:
     host_ip = "127.0.0.1"
 
-uvicorn.run("house_calendar.main:app", host=host_ip)
+uvicorn.run("house_calendar.api:app", host=host_ip)
