@@ -1,5 +1,5 @@
 from ..datastore import inc_event_id, events_db
-from ..items import BaseEvent
+from ..models import BaseEvent
 def add_event_dao(event: BaseEvent):
     id = inc_event_id()
     events_db.append({**event.dict(), "id": id})

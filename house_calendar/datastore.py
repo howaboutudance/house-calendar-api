@@ -1,6 +1,6 @@
 from typing import Callable, MutableMapping, Text, List
 from datetime import datetime
-from .items import Event
+from .models import Event
 from .util import JSONType
 DB = "house-calendar"
 EVENT_COLLECTION = "events"

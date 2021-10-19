@@ -7,7 +7,8 @@ house_calendar/api.py
 house_calendar/config.py
 house_calendar/datastore.py
 house_calendar/dependencies.py
-house_calendar/items.py
+house_calendar/kafka_producer.py
+house_calendar/models.py
 house_calendar/util.py
 house_calendar/routers/__init__.py
 house_calendar/routers/events.py

@@ -1,4 +1,4 @@
-from ..items import Status
+from ..models import Status
 from fastapi import APIRouter, Request
 from fastapi.responses import PlainTextResponse, JSONResponse
 

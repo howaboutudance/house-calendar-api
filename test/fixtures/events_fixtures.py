@@ -1,4 +1,4 @@
-from house_calendar import items
+from house_calendar import models as items
 from datetime import datetime, timedelta
 import pytest
 

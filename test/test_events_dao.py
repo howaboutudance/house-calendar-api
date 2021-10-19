@@ -1,6 +1,6 @@
 from house_calendar.routers.events_dao import add_event_dao, delete_event_dao
 import pytest
-from house_calendar.items import Event, Location
+from house_calendar.models import Event, Location
 
 @pytest.fixture
 def event_fixture():

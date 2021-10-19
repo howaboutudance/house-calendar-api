@@ -4,7 +4,7 @@ from fastapi.param_functions import Path
 from fastapi.responses import JSONResponse
 from .events_dao import events_db, add_event_dao
 from ..dependencies import ListParameters
-from ..items import Event, BaseEvent
+from ..models import Event, BaseEvent
 from fastapi import APIRouter
 
 router = APIRouter(prefix="/events", tags=["events"])
