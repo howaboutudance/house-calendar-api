@@ -10,6 +10,9 @@ house_calendar/dependencies.py
 house_calendar/kafka_producer.py
 house_calendar/models.py
 house_calendar/util.py
+house_calendar/db/__init__.py
+house_calendar/db/session.py
+house_calendar/db/tables_models.py
 house_calendar/routers/__init__.py
 house_calendar/routers/events.py
 house_calendar/routers/events_dao.py
@@ -20,6 +23,7 @@ house_calendar_api.egg-info/dependency_links.txt
 house_calendar_api.egg-info/requires.txt
 house_calendar_api.egg-info/top_level.txt
 test/test_api.py
+test/test_config.py
 test/test_events_dao.py
 test/test_intg_api.py
 test/test_items.py
