@@ -1,6 +1,7 @@
 from house_calendar import models as items
 from datetime import datetime, timedelta
 import pytest
+from house_calendar.models import Event, Location
 
 @pytest.fixture()
 def location_fixture():
@@ -24,3 +25,14 @@ def event_post_fixture():
         "address": "123 Olive Way, Seattle, WA 98102"
     }
   }
+
+@pytest.fixture
+def event_dao_fixture():
+
+  return Event(
+      name="Train Car House Party", start_date="2021-07-09T21:00", 
+      end_date="2021-07-10T04:00", location=Location(
+          name="Oriental Express",
+          address = "123 Olive Way, Seattle, WA 98102"
+      )
+  )
