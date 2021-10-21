@@ -2,17 +2,22 @@ from typing import List
 from fastapi import Depends
 from fastapi.param_functions import Path
 from fastapi.responses import JSONResponse
+from sqlalchemy.ext.asyncio.session import AsyncSession
+
+from house_calendar.db.session import get_db
+from house_calendar.db.tables_models import EventTable
 from .events_dao import events_db, add_event_dao
 from ..dependencies import ListParameters
 from ..models import Event, BaseEvent
 from fastapi import APIRouter
+import uuid
 
 router = APIRouter(prefix="/events", tags=["events"])
 
 @router.post("/")
-async def add_event(event: BaseEvent):
-    instance = add_event_dao(event)
-    return JSONResponse({"instance": instance, "id": 1})
+async def add_event(event: BaseEvent, session: AsyncSession = Depends(get_db)):
+    instance = add_event_dao(event, session) 
+    return JSONResponse({"instance": {}, "id": str(instance.id)})
 
 @router.get("/{id}", response_model=Event)
 async def get_event(id: int) -> JSONResponse:
