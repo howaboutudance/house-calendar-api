@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from house_calendar.db.session import get_db
 from house_calendar.db.table_models import EventTable
-from .events_dao import events_db, add_event_dao
+from .events_dao import delete_event_dao, add_event_dao
 from ..dependencies import ListParameters
 from ..models import Event, BaseEvent
 from fastapi import APIRouter
@@ -16,31 +16,26 @@ router = APIRouter(prefix="/events", tags=["events"])
 
 @router.post("/")
 async def add_event(event: BaseEvent, session: AsyncSession = Depends(get_db)):
-    instance = add_event_dao(event, session) 
-    return JSONResponse({"instance": {}, "id": str(instance.id)})
+    result = await add_event_dao(event, session) 
+    return JSONResponse({"id": str(result["id"])})
 
 @router.get("/{id}", response_model=Event)
 async def get_event(id: int) -> JSONResponse:
-    results = [event for event in events_db if event["id"] == id]
-    if len(results):
-        resp = JSONResponse(results[0])
-    else:
-        resp = JSONResponse({}, status_code=404)
+    # results = [event for event in events_db if event["id"] == id]
+    resp = JSONResponse([])
+    # else:
+    #     resp = JSONResponse({}, status_code=404)
     return resp
 
 @router.delete("/{id}")
 async def delete_event(
-    id: int = Path(..., title="ID of the event", ge=0)):
-    if id in [event["id"] for event in events_db]:
-        try:
-            event_index = [event["id"] for event in events_db].index(id)
-            del events_db[event_index]
-        except IndexError as e:
-            return JSONResponse({"error": e}, status_code=404)
-        except ValueError as e:
-            return JSONResponse({"error", e}, status_code=404)
-    else:
-        return JSONResponse({"message": f"{id} not found"}, status_code=404)
+    id: str,
+    session: AsyncSession = Depends(get_db)):
+    try:
+        action_response = await delete_event_dao(id, session)
+        return JSONResponse(action_response, status_code=200)
+    except ValueError as e:
+        return JSONResponse({"error": str(e)}, status_code=404)
 
 
 @router.get("/", response_model=List[Event])

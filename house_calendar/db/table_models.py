@@ -1,10 +1,10 @@
 from typing import Text
 from sqlalchemy import Column
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import as_declarative, declared_attr
 import uuid
 
-from sqlalchemy.sql.sqltypes import JSON, DateTime, String
+from sqlalchemy.sql.sqltypes import DateTime, String, Integer
 
 @as_declarative()
 class Base():
@@ -23,7 +23,5 @@ class EventTable(Base):
     name = Column(String)
     start_date = Column(DateTime)
     end_date = Column(DateTime)
-    # TODO: figure out how to convert from timdelta
-    # duration = Column(String)
-    # TODO: research how to convert model to JSON
-    # location = Column(JSON)
+    duration = Column(Integer)
+    location = Column(JSONB)

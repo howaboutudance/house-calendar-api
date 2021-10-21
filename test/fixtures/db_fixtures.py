@@ -11,6 +11,8 @@ def mock_session():
     class MockSession():
         def add(self, obj):
             pass
+        def commit(self, *args):
+            pass
     
     return MockSession()
 
