@@ -18,7 +18,6 @@ class BaseEvent(BaseModel):
     end_date: datetime = Field(None, description="End time and date of the event")
     duration: timedelta = Field(None, description="Duration (in seconds)")
     location: Location
-    repeat_start_date: Optional[datetime]
     id: Optional[int]
     @validator('duration', pre=True, always=True)
     def default_duration(cls, v, *, values, **kwargs):
@@ -34,7 +33,8 @@ class Event(BaseEvent):
 
 class Status(BaseModel):
     alive:  Optional[bool] = Field(True)
-    name: Optional[Text] = Field(f"House Music Calendar API {HOUSE_CALENDAR_VERSION} on Python {help_get_version()} - uvicorn {uvicorn_version}")
+    name: Optional[Text] = Field(
+        f"House Music Calendar API {HOUSE_CALENDAR_VERSION} on Python {help_get_version()} - uvicorn {uvicorn_version}")
     python_version: Optional[Text] = Field(sys.version)
     fastapi_version: Optional[Text] = Field(fastapi_version)
     uvicorn_version: Optional[Text] = Field(uvicorn_version)

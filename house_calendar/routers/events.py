@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from house_calendar.db.session import get_db
-from house_calendar.db.tables_models import EventTable
+from house_calendar.db.table_models import EventTable
 from .events_dao import events_db, add_event_dao
 from ..dependencies import ListParameters
 from ..models import Event, BaseEvent

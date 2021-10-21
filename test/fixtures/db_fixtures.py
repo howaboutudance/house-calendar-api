@@ -3,7 +3,7 @@ import asyncio
 from typing import Generator, Callable
 from sqlalchemy.ext.asyncio import AsyncSession
 from house_calendar.db.session import engine, async_session
-from house_calendar.db.tables_models import Base
+from house_calendar.db.table_models import Base
 from fastapi import FastAPI
 
 @pytest.fixture

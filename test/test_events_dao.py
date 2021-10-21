@@ -1,5 +1,5 @@
 from house_calendar.routers.events_dao import add_event_dao, delete_event_dao
-from house_calendar.db.tables_models import EventTable
+from house_calendar.db.table_models import EventTable
 
 
 def test_add_event_dao(caplog, event_dao_fixture, mock_session):

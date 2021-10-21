@@ -10,3 +10,4 @@ setuptools
 safety
 requests
 ipdb
+sqlalchemy-stubs
