@@ -1,7 +1,7 @@
 from house_calendar import models as items
 from datetime import datetime, timedelta
 import pytest
-from house_calendar.models import Event, Location
+from house_calendar.models import EventModel, Location
 
 @pytest.fixture()
 def location_fixture():
@@ -9,7 +9,7 @@ def location_fixture():
 
 @pytest.fixture()
 def event_valid_fixture(location_fixture):
-    return  items.Event(name = "Event A", 
+    return  items.EventModel(name = "Event A", 
         start_date=datetime(2021, 7, 27, 20), end_date=datetime(2021, 7, 28, 1),
         location=location_fixture)
 
@@ -29,7 +29,7 @@ def event_post_fixture():
 @pytest.fixture
 def event_dao_fixture():
 
-  return Event(
+  return EventModel(
       name="Train Car House Party", start_date="2021-07-09T21:00", 
       end_date="2021-07-10T04:00", location=Location(
           name="Oriental Express",

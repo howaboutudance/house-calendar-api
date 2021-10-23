@@ -25,8 +25,7 @@ setuptools.setup(
         "fastapi",
         "uvicorn",
         "asyncpg",
-        "alembic",
-        "sqlmodel"
+        "alembic"
     ],
     python_requires='>=3.6',
 )

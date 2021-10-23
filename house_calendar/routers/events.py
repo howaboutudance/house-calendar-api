@@ -1,25 +1,25 @@
-from typing import List
-from fastapi import Depends
-from fastapi.param_functions import Path
+import logging
+
+from fastapi import Depends, APIRouter
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio.session import AsyncSession
+from typing import List
 
-from house_calendar.db.session import get_db
-from house_calendar.db.table_models import EventTable
 from .events_dao import delete_event_dao, add_event_dao
+from ..db.session import get_db
 from ..dependencies import ListParameters
-from ..models import Event, BaseEvent
-from fastapi import APIRouter
-import uuid
+from ..models import EventModel, BaseEventModel
 
 router = APIRouter(prefix="/events", tags=["events"])
 
+log = logging.getLogger(__name__)
+
 @router.post("/")
-async def add_event(event: BaseEvent, session: AsyncSession = Depends(get_db)):
+async def add_event(event: BaseEventModel, session: AsyncSession = Depends(get_db)):
     result = await add_event_dao(event, session) 
     return JSONResponse({"id": str(result["id"])})
 
-@router.get("/{id}", response_model=Event)
+@router.get("/{id}", response_model=EventModel)
 async def get_event(id: int) -> JSONResponse:
     # results = [event for event in events_db if event["id"] == id]
     resp = JSONResponse([])
@@ -38,7 +38,7 @@ async def delete_event(
         return JSONResponse({"error": str(e)}, status_code=404)
 
 
-@router.get("/", response_model=List[Event])
+@router.get("/", response_model=List[EventModel])
 async def get_event_list(
     list_parameters: ListParameters= Depends(ListParameters))-> JSONResponse:
     """

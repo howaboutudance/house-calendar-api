@@ -1,6 +1,6 @@
-from ..models import Status
 from fastapi import APIRouter, Request
 from fastapi.responses import PlainTextResponse, JSONResponse
+from ..models import Status
 
 router = APIRouter(tags=["health"])
 
