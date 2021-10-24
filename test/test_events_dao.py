@@ -30,4 +30,4 @@ async def test_delete_event_ado(caplog, event_dao_fixture, db_session):
     add_result = await add_event_dao(test_event, test_session)
     result = await delete_event_dao(str(add_result["id"].hex), test_session)
     assert "affected" in result
-    assert 0 == result["affected"]
+    assert 1 == result["affected"]

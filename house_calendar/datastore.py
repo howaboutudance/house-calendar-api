@@ -1,6 +1,3 @@
-from typing import Callable, MutableMapping, Text, List
-from datetime import datetime
-from .models import Event
 # Copyright 2021 Michael Penhallegon 
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +12,15 @@ from .models import Event
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Callable, MutableMapping, Text, List
+from datetime import datetime
+from .models import EventModel
+
 from .util import JSONType
 DB = "house-calendar"
 EVENT_COLLECTION = "events"
 
-def get_events(event: Event) -> List[MutableMapping[Text, JSONType]]:
+def get_events(event: EventModel) -> List[MutableMapping[Text, JSONType]]:
         return [] 
 
 def incrementable_id() -> Callable[[], int]:

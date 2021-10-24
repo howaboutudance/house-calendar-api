@@ -35,10 +35,7 @@ async def add_event(event: BaseEventModel, session: AsyncSession = Depends(get_d
 
 @router.get("/{id}", response_model=EventModel)
 async def get_event(id: int) -> JSONResponse:
-    # results = [event for event in events_db if event["id"] == id]
     resp = JSONResponse([])
-    # else:
-    #     resp = JSONResponse({}, status_code=404)
     return resp
 
 @router.delete("/{id}")

@@ -3,7 +3,6 @@ README.md
 setup.py
 house_calendar/__init__.py
 house_calendar/__main__.py
-house_calendar/alembic.py
 house_calendar/api.py
 house_calendar/config.py
 house_calendar/datastore.py
