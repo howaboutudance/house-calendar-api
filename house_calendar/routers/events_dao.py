@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+events_dao create a series of function that models the Data Access Object
+Pattern.
+"""
 import uuid
 
 from typing import Mapping, Any
@@ -24,6 +28,12 @@ from ..dependencies import ListParameters
 
 
 async def add_event_dao(event: BaseEventModel, session: AsyncSession) -> Mapping[str, Any]:
+    """
+    Creates new objects in the database
+
+    :param event: the event to be added
+    :returns: a dict with the added event's id and the resulting object
+    """
     table_entry = Event(
         id=uuid.uuid4(), 
         name=event.name,
@@ -32,10 +42,21 @@ async def add_event_dao(event: BaseEventModel, session: AsyncSession) -> Mapping
         location=event.location.dict()
         )
     session.add(table_entry)
-    return {"id": table_entry.id, "result": EventModel.from_orm(table_entry)}
+    return {"status": "OK", "id": table_entry.id, 
+        "result": EventModel.from_orm(table_entry)}
 
 
 async def delete_event_dao(event_id: str, session: AsyncSession):
+    """
+    Deletes event by uuid id
+
+    :param event_id: the id of the object to delete
+    :param session: session to execute action in
+
+    :raises ValueError: if row count is 0, (action had no effect)
+
+    :returns: status, id parsed as string, and number of rows affected
+    """
     parsed_id = uuid.UUID(event_id)
     query = delete(Event).where(Event.id==parsed_id)
     result = await session.execute(query)
@@ -46,12 +67,28 @@ async def delete_event_dao(event_id: str, session: AsyncSession):
 
 
 async def get_event_list_dao(list_param: ListParameters, session: AsyncSession):
+    """
+    Get an event list in a JSON format
+
+    :param list_param: parameters used to query values
+    :param session: session to execute action in
+
+    :returns: status, list of event entries and row_count
+    """
     query = select(Event)
     result = await session.execute(query)
     resp_list = [EventModel.from_orm(r).json() for r in result]
-    return {"status":"OK", "rows": resp_list}
+    return {"status":"OK", "rows": resp_list, "row_count": len(resp_list)}
 
 async def get_event_dao(event_id: str, session: AsyncSession):
+    """
+    Get event detail of one event
+
+    :param event_id: the id of the event
+    :param session: session to execute action in
+
+    :returns: status and result
+    """
     parsed_id = uuid.UUID(event_id)
     query = select(Event).where(Event.id == parsed_id)
     result = (await session.execute(query)).one()
@@ -59,4 +96,4 @@ async def get_event_dao(event_id: str, session: AsyncSession):
         resp = EventModel.from_orm(result[0])
     else:
         raise ValueError
-    return {"status": "OK", "rows": resp.json()}
+    return {"status": "OK", "result": resp.json()}
