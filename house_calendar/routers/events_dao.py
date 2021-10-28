@@ -20,6 +20,7 @@ from sqlalchemy.sql.expression import delete, select
 
 from ..db.table_models import Event
 from ..models import BaseEventModel, EventModel
+from ..dependencies import ListParameters
 
 
 async def add_event_dao(event: BaseEventModel, session: AsyncSession) -> Mapping[str, Any]:
@@ -38,10 +39,23 @@ async def delete_event_dao(event_id: str, session: AsyncSession):
     parsed_id = uuid.UUID(event_id)
     query = delete(Event).where(Event.id==parsed_id)
     result = await session.execute(query)
+    if result.rowcount == 0:
+        raise ValueError
     return {"status": "OK", "id": parsed_id.hex, "affected": result.rowcount}
 
 
-async def get_events_dao(session: AsyncSession):
+async def get_event_list_dao(list_param: ListParameters, session: AsyncSession):
     query = select(Event)
     result = await session.execute(query)
-    return {"status":"OK", "rows": EventModel.from_orm(result)}
+    resp_list = [EventModel.from_orm(r).json() for r in result]
+    return {"status":"OK", "rows": resp_list}
+
+async def get_event_dao(event_id: str, session: AsyncSession):
+    parsed_id = uuid.UUID(event_id)
+    query = select(Event).where(Event.id == parsed_id)
+    result = (await session.execute(query)).one()
+    if len(result) == 1:
+        resp = EventModel.from_orm(result[0])
+    else:
+        raise ValueError
+    return {"status": "OK", "rows": resp.json()}

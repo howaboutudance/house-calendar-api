@@ -16,6 +16,7 @@ from house_calendar import models as items
 from datetime import datetime, timedelta
 import pytest
 from house_calendar.models import EventModel, LocationModel
+from house_calendar.util import create_iso_date
 
 @pytest.fixture()
 def location_fixture():
@@ -26,6 +27,12 @@ def event_valid_fixture(location_fixture):
     return  items.EventModel(name = "Event A", 
         start_date=datetime(2021, 7, 27, 20), end_date=datetime(2021, 7, 28, 1),
         location=location_fixture)
+
+@pytest.fixture()
+def event_with_uuid_fixture(location_fixture):
+  return {"name":"Habitat",
+    "start_date": create_iso_date(2021, 7, 14, 21),
+    "end_date": create_iso_date(2021, 7, 15, 4), "location": location_fixture.dict()}
 
 @pytest.fixture
 def event_post_fixture():

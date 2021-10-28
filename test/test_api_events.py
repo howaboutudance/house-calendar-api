@@ -12,7 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Awaitable
 import pytest
+import uuid
+from house_calendar.util import is_uuid
 
 
 pytestmark = pytest.mark.asyncio
@@ -29,7 +32,10 @@ async def test_post_event_valid_entry(event_post_fixture, async_client, db_sessi
   expected_resp_keys = set(["id"])
   resp = await async_client.post("/events/", json=test_event)
   assert resp.status_code == 200
-  assert expected_resp_keys <= set(resp.json().keys())
+  
+  resp_json = resp.json()
+  assert expected_resp_keys <= set(resp_json.keys())
+  assert is_uuid(resp_json["id"])
 
 
 async def test_delete_event_invalid(async_client, db_session):
@@ -37,13 +43,31 @@ async def test_delete_event_invalid(async_client, db_session):
   assert resp.status_code == 404
 
 
-async def test_delete_event_valid(async_client, db_session):
-  resp = await async_client.delete("/events/00010203-0405-0607-0809-0a0b0c0d0e0f")
+async def test_delete_event_valid(async_client, db_session, event_with_uuid_fixture):
+  add_event = await async_client.post("/events/", json=event_with_uuid_fixture)
+  assert add_event.status_code == 200
+  add_event_json = add_event.json()
+  assert is_uuid(add_event_json["id"])
+
+  resp = await async_client.delete("/events/{id}".format(id=add_event_json["id"]))
   assert resp.status_code == 200
 
+  resp_json = resp.json()
+  assert 1 >= resp_json["affected"]
+
+async def test_get_event(caplog, async_client, db_session, event_with_uuid_fixture):
+  add_event = await async_client.post("/events/", json=event_with_uuid_fixture)
+  assert add_event.status_code == 200
+  add_event_uuid = add_event.json()["id"]
+  assert is_uuid(add_event_uuid)
+
+  resp = await async_client.get(f"/events/{add_event_uuid}")
+  assert resp.status_code == 200
+  resp_json = resp.json()
+  assert "error" not in resp_json
 
 @pytest.mark.skip
-def test_get_events():
-  resp = client.get("/events/")
+async def test_get_events(async_client, db_session):
+  resp = async_client.get("/events/")
   assert resp.status_code == 200
   assert len(resp.json()) > 0
