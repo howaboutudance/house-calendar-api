@@ -42,11 +42,11 @@ async def add_event(event: BaseEventModel, session: AsyncSession = Depends(get_d
 @router.get("/{id}", response_model=EventModel)
 async def get_event(id: str,
     session: AsyncSession = Depends(get_db)) -> JSONResponse:
-    #try:
-    resp = await get_event_dao(id, session)
-    return JSONResponse(resp)
-    #except ValueError as e:
-    #   return JSONResponse({"error": str(e)}, status_code=404)
+    try:
+        resp = await get_event_dao(id, session)
+        return JSONResponse(resp)
+    except ValueError as e:
+       return JSONResponse({"error": str(e)}, status_code=404)
 
 @router.delete("/{id}")
 async def delete_event(id: str,
@@ -66,7 +66,7 @@ async def get_event_list(list_parameters: ListParameters= Depends(ListParameters
     """
     filter_keys = ["name", "start_date", "end_date", "id", "location"]
     try:
-        resp = get_event_list_dao(list_parameters)
+        resp = get_event_list_dao(list_parameters, session)
         return JSONResponse(resp)
     except ValueError as e:
-        JSONResponse({"error": str(e)}, status_code=404)
+        return JSONResponse({"error": str(e)}, status_code=404)

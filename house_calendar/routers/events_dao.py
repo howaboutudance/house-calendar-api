@@ -39,9 +39,10 @@ async def delete_event_dao(event_id: str, session: AsyncSession):
     parsed_id = uuid.UUID(event_id)
     query = delete(Event).where(Event.id==parsed_id)
     result = await session.execute(query)
-    if result.rowcount == 0:
+    result_rowcount: int = result.rowcount #type: ignore
+    if result_rowcount == 0:
         raise ValueError
-    return {"status": "OK", "id": parsed_id.hex, "affected": result.rowcount}
+    return {"status": "OK", "id": parsed_id.hex, "affected": result_rowcount}
 
 
 async def get_event_list_dao(list_param: ListParameters, session: AsyncSession):

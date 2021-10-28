@@ -20,7 +20,7 @@ from pydantic.types import UUID4
 from .config import APP_CONFIG
 
 class ORMBaseModel(BaseModel):
-    class Config(BaseModel.Config):
+    class Config(BaseModel.Config): #type: ignore
         orm_mode = True
 
 class LocationModel(ORMBaseModel):
