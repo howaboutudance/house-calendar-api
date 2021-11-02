@@ -44,7 +44,7 @@ class EventModel(BaseEventModel):
         description="Start time and date of the event")
 
 class StatusBaseModel(BaseModel):
-    status: str
+    status: str = "OK"
 
 
 class EventListStatusModel(StatusBaseModel):

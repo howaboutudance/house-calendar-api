@@ -40,7 +40,7 @@ async def add_event_dao(event: BaseEventModel,
         name=event.name,
         start_date=event.start_date,
         end_date=event.end_date,
-        location=event.location.dict()
+        location=event.location.dict() #type: ignore
         )
     session.add(table_entry)
 

@@ -2,3 +2,4 @@ fastapi
 uvicorn
 asyncpg
 alembic
+psycopg2-binary

@@ -14,13 +14,12 @@
 
 import logging
 
-from fastapi import Depends, APIRouter
+from fastapi import Depends, APIRouter, Response, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio.session import AsyncSession
-from typing import List
+from typing import List, Union
 
 from sqlalchemy.sql.sqltypes import JSON
-from starlette.responses import Response
 
 from .events_dao import (
     delete_event_dao, 
@@ -46,27 +45,28 @@ async def add_event(event: BaseEventModel, session: AsyncSession = Depends(get_d
 
 @router.get("/{id}", response_model=EventStatusModel)
 async def get_event(id: str,
-    session: AsyncSession = Depends(get_db)) -> JSONResponse:
+    session: AsyncSession = Depends(get_db)) -> Union[EventStatusModel, ErrorStatusModel]:
     try:
         resp = await get_event_dao(id, session)
         return resp
     except ValueError as e:
-       return JSONResponse({"error": str(e)}, status_code=404)
+       return ErrorStatusModel(error=e, status="ERROR")
 
 @router.delete("/{id}")
-async def delete_event(id: str,
+async def delete_event(id: str, response: Response,
     session: AsyncSession = Depends(get_db)) -> JSONResponse:
     try:
         action_response = await delete_event_dao(id, session)
         return JSONResponse(action_response, status_code=200)
     except ValueError as e:
+        response.status_code = status.HTTP_404_NOT_FOUND
         return JSONResponse({"error": str(e)}, status_code=404)
 
 
 @router.get("/")
 async def get_event_list(response: Response,
     list_parameters: ListParameters= Depends(ListParameters),
-    session: AsyncSession = Depends(get_db))-> JSONResponse:
+    session: AsyncSession = Depends(get_db))-> Union[EventListStatusModel, ErrorStatusModel]:
     """
     Get Events List (with querying)
     """
@@ -75,4 +75,5 @@ async def get_event_list(response: Response,
         resp = await get_event_list_dao(list_parameters, session)
         return resp
     except ValueError as e:
+        response.status_code = status.HTTP_404_NOT_FOUND
         return ErrorStatusModel(status="ERROR", error=str(e))
