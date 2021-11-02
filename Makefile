@@ -31,16 +31,20 @@ build: FORCE
 	${DOCKER_BUILD} --no-cache=true --target=app -t ${BASE_TAG}
 
 run:
-	${DOCKER_RUN} -p 8000:8000 ${BASE_TAG}
-
+	docker compose up --build -d
 test: FORCE
 	${DOCKER_BUILD} --target=test -t ${INTERACT_TAG}
 	${DOCKER_RUN} -it ${INTERACT_TAG}
 
 local-test: FORCE
 	tox -e py39-unit
-	mypy house_calendar
 
+done: FORCE
+	(\
+		docker compose up --build -d; \
+		tox -e done; \
+		docker compose down -v; \
+	)
 dev:
 	uvicorn house_calendar.main:app --reload
 
