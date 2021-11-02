@@ -1,10 +1,25 @@
-from typing import Text
-from sqlalchemy import Column
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import as_declarative, declared_attr
+# Copyright 2021 Michael Penhallegon 
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import uuid
 
-from sqlalchemy.sql.sqltypes import JSON, DateTime, String
+from typing import Text
+from sqlalchemy import Column
+from sqlalchemy.dialects.postgresql import UUID, JSONB
+from sqlalchemy.orm import as_declarative, declared_attr
+from sqlalchemy.sql.sqltypes import DateTime, String, Integer
+
 
 @as_declarative()
 class Base():
@@ -18,12 +33,11 @@ class Base():
     def __tablename__(cls) -> Text:
         return cls.__name__.lower()
 
-class EventTable(Base):
+
+class Event(Base):
     __name__ = "event"
     name = Column(String)
     start_date = Column(DateTime)
     end_date = Column(DateTime)
-    # TODO: figure out how to convert from timdelta
-    # duration = Column(String)
-    # TODO: research how to convert model to JSON
-    # location = Column(JSON)
+    duration = Column(Integer)
+    location = Column(JSONB)

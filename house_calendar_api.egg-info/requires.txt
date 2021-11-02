@@ -2,4 +2,4 @@ fastapi
 uvicorn
 asyncpg
 alembic
-sqlmodel
+psycopg2-binary

@@ -1,6 +1,3 @@
-from fixtures.events_fixtures import *
-from fixtures.db_fixtures import *
-from fixtures.async_client import async_client
 # Copyright 2021 Michael Penhallegon 
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,4 +12,17 @@ from fixtures.async_client import async_client
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from fixtures.event_intg_fixtures import intg_event_single
+import pytest
+import datetime
+from typing import Text
+
+def _create_iso_date(*args) -> Text:
+    return datetime.datetime(*args).isoformat()
+
+@pytest.fixture()
+def intg_event_single():
+    location = {"name": "Monkey Loft",
+        "address": "2915 1st Ave S, Seattle, WA 98134"}
+    event = {"name":"Habitat", "start_date": _create_iso_date(2021, 7, 14, 21),
+    "end_date": _create_iso_date(2021, 7, 15, 4), "location": location}
+    return event
