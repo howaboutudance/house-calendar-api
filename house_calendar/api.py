@@ -16,18 +16,19 @@ import logging
 import time
 
 from typing import Callable
-from house_calendar.routers import events
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
 from .config import APP_CONFIG 
-from .routers import health, events
+from .routers import health, events, location
 
 
 app = FastAPI(title="House Music Calendar", version=APP_CONFIG.HOUSE_CALENDAR_VERSION)
 app.include_router(health.router)
 app.include_router(events.router)
+app.include_router(location.router)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=APP_CONFIG.ORIGINS,

@@ -43,14 +43,17 @@ async def add_event(event: BaseEventModel, session: AsyncSession = Depends(get_d
     result = await add_event_dao(event, session) 
     return result
 
+
 @router.get("/{id}", response_model=EventStatusModel)
-async def get_event(id: str,
-    session: AsyncSession = Depends(get_db)) -> Union[EventStatusModel, ErrorStatusModel]:
+async def get_event(id: str, response: Response,
+   session: AsyncSession = Depends(get_db)) -> Union[EventStatusModel, ErrorStatusModel]:
     try:
         resp = await get_event_dao(id, session)
         return resp
     except ValueError as e:
+       response.status_code = status.HTTP_404_NOT_FOUND
        return ErrorStatusModel(error=e, status="ERROR")
+
 
 @router.delete("/{id}")
 async def delete_event(id: str, response: Response,

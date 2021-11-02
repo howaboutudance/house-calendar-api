@@ -18,7 +18,6 @@ Pattern.
 """
 import uuid
 
-from typing import Mapping, Any
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.sql.expression import delete, select
 

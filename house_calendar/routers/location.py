@@ -12,21 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
+
+from fastapi import Depends, Response
+from fastapi.responses import JSONResponse
+from fastapi.routing import APIRouter
+from sqlalchemy.ext.asyncio.session import AsyncSession
+from typing import Union
+
+from .location_dao import get_location_list_dao
+from ..db.session import get_db
+from ..dependencies import ListParameters
+from ..models import ErrorStatusModel, LocationListStatusModel
+
+router = APIRouter(prefix="/locations", tags=["location"])
+
+log = logging.getLogger(__name__)
+
+
 # TODO: make seperate router and build out dao/schemas/tables 
-# @app.get("/locations/", tags=["location"])
-# async def get_location_list(
-#     list_parameters: ListParameters = Depends(ListParameters)) -> JSONResponse:
-#     resp = [{
-#         **location, # type: ignore
-#         "events": [
-#             {
-#                 "name": event["name"],
-#                 "start_date": event["start_date"],
-#                 "end_date": event["end_date"],
-#                 "id": event["id"]
-#             } for event in events_db
-#             if event["location"]["name"] == location["name"] # type: ignore
-#             ]}
-#         for location in locations_db
-#     ][list_parameters.offset:list_parameters.limit]
-#     return JSONResponse(resp)
+@router.get("/", tags=["location"])
+async def get_location_list(response: Response,
+    list_parameters: ListParameters = Depends(ListParameters),
+    session: AsyncSession = Depends(get_db)) -> Union[ErrorStatusModel, LocationListStatusModel]:
+    try:
+        return await get_location_list_dao(session)
+    except ValueError as e:
+        return ErrorStatusModel(status="ERROR", error=str(e))

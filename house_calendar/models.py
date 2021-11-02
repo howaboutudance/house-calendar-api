@@ -23,9 +23,15 @@ class ORMBaseModel(BaseModel):
     class Config(BaseModel.Config): #type: ignore
         orm_mode = True
 
+
 class LocationModel(ORMBaseModel):
     name: Text = Field(..., max_length=200)
     address: Text
+
+
+class LocationCountModel(LocationModel):
+    count: int
+
 
 class BaseEventModel(ORMBaseModel):
     id: Optional[UUID4]
@@ -38,25 +44,35 @@ class BaseEventModel(ORMBaseModel):
     def default_duration(cls, v, *, values, **kwargs):
       return v or values['end_date'] - values['start_date']
 
+
 class EventModel(BaseEventModel):
     start_date: datetime = Field( 
         default=datetime.now(),
         description="Start time and date of the event")
 
+
 class StatusBaseModel(BaseModel):
     status: str = "OK"
 
 
-class EventListStatusModel(StatusBaseModel):
-    rows: List[EventModel]
+class ListStatusModel(StatusBaseModel):
     row_count: int
+
+class EventListStatusModel(ListStatusModel):
+    rows: List[EventModel]
+
+class LocationListStatusModel(ListStatusModel):
+    rows: List[LocationModel]
+
 
 class EventStatusModel(StatusBaseModel):
     id: UUID4
     result: EventModel
 
+
 class ErrorStatusModel(StatusBaseModel):
     error: str
+
 
 class Status(BaseModel):
     alive:  Optional[bool] = Field(True)
