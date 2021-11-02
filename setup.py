@@ -39,7 +39,8 @@ setuptools.setup(
         "fastapi",
         "uvicorn",
         "asyncpg",
-        "alembic"
+        "alembic",
+        "psycopg2-binary"
     ],
     python_requires='>=3.6',
 )

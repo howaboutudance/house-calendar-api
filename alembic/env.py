@@ -6,7 +6,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from house_calendar.db.table_models import Base
+from house_calendar.db.table_models import *
 log = logging.getLogger(__name__)
 
 POSTGRES_URI = os.environ["POSTGRES_MIGRATE_URI"]

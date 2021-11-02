@@ -35,6 +35,7 @@ COPY --from=builder /app/dist ./app/dist
 WORKDIR /app
 RUN pip3 install dist/house_calendar*
 ENV HOST_SERVER 0.0.0.0
+ENV POSTGRES_MIGRATE_URI postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/hc_events
 COPY ./alembic.ini .
 COPY ./alembic/. ./alembic/
-CMD python -m house_calendar
+CMD alembic upgrade heads && python -m house_calendar

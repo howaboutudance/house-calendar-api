@@ -65,9 +65,9 @@ async def test_get_event(caplog, async_client, db_session, event_with_uuid_fixtu
   assert resp.status_code == 200
   resp_json = resp.json()
   assert "error" not in resp_json
+  assert "result" in resp_json
 
-@pytest.mark.skip
-async def test_get_events(async_client, db_session):
-  resp = async_client.get("/events/")
+async def test_get_event_list(async_client, db_session):
+  resp = await async_client.get("/events/")
   assert resp.status_code == 200
   assert len(resp.json()) > 0

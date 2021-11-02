@@ -20,6 +20,7 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 from typing import List
 
 from sqlalchemy.sql.sqltypes import JSON
+from starlette.responses import Response
 
 from .events_dao import (
     delete_event_dao, 
@@ -28,7 +29,11 @@ from .events_dao import (
     get_event_dao)
 from ..db.session import get_db
 from ..dependencies import ListParameters
-from ..models import EventModel, BaseEventModel
+from ..models import (
+    BaseEventModel,
+    EventListStatusModel,
+    EventStatusModel,
+    ErrorStatusModel)
 
 router = APIRouter(prefix="/events", tags=["events"])
 
@@ -37,14 +42,14 @@ log = logging.getLogger(__name__)
 @router.post("/")
 async def add_event(event: BaseEventModel, session: AsyncSession = Depends(get_db)):
     result = await add_event_dao(event, session) 
-    return JSONResponse({"id": str(result["id"])})
+    return result
 
-@router.get("/{id}", response_model=EventModel)
+@router.get("/{id}", response_model=EventStatusModel)
 async def get_event(id: str,
     session: AsyncSession = Depends(get_db)) -> JSONResponse:
     try:
         resp = await get_event_dao(id, session)
-        return JSONResponse(resp)
+        return resp
     except ValueError as e:
        return JSONResponse({"error": str(e)}, status_code=404)
 
@@ -58,15 +63,16 @@ async def delete_event(id: str,
         return JSONResponse({"error": str(e)}, status_code=404)
 
 
-@router.get("/", response_model=List[EventModel])
-async def get_event_list(list_parameters: ListParameters= Depends(ListParameters),
+@router.get("/")
+async def get_event_list(response: Response,
+    list_parameters: ListParameters= Depends(ListParameters),
     session: AsyncSession = Depends(get_db))-> JSONResponse:
     """
     Get Events List (with querying)
     """
     filter_keys = ["name", "start_date", "end_date", "id", "location"]
     try:
-        resp = get_event_list_dao(list_parameters, session)
-        return JSONResponse(resp)
+        resp = await get_event_list_dao(list_parameters, session)
+        return resp
     except ValueError as e:
-        return JSONResponse({"error": str(e)}, status_code=404)
+        return ErrorStatusModel(status="ERROR", error=str(e))

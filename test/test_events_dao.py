@@ -23,13 +23,13 @@ async def test_add_event_dao(caplog, event_dao_fixture, db_session):
     test_session = db_session
     test_event = event_dao_fixture
     result = await add_event_dao(test_event, test_session)
-    assert type(result["result"]) is EventModel
+    assert type(result.result) is EventModel
 
 async def test_delete_event_dao(caplog, event_dao_fixture, db_session):
     test_session = db_session
     test_event = event_dao_fixture
     add_result = await add_event_dao(test_event, test_session)
-    result = await delete_event_dao(str(add_result["id"].hex), test_session)
+    result = await delete_event_dao(add_result.id.hex, test_session)
     assert "affected" in result
     assert 1 == result["affected"]
 
@@ -38,10 +38,8 @@ async def test_delete_event_dao_raise_on_nil_uuid(caplog, db_session):
     with pytest.raises(ValueError):
         result = await delete_event_dao("00000000-0000-0000-0000-000000000000", test_session)
 
-@pytest.mark.skip
 async def test_get_event_list_dao(caplog, db_session):
     test_session = db_session
     list_params = ListParameters()
     result = await get_event_list_dao(list_params, test_session)
-    assert "rows" in result
-    assert type(result["rows"]) is list
+    assert type(result.rows) is list

@@ -23,11 +23,12 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.sql.expression import delete, select
 
 from ..db.table_models import Event
-from ..models import BaseEventModel, EventModel
+from ..models import BaseEventModel, EventListStatusModel, EventStatusModel, EventModel
 from ..dependencies import ListParameters
 
 
-async def add_event_dao(event: BaseEventModel, session: AsyncSession) -> Mapping[str, Any]:
+async def add_event_dao(event: BaseEventModel, 
+    session: AsyncSession) -> EventStatusModel:
     """
     Creates new objects in the database
 
@@ -42,8 +43,9 @@ async def add_event_dao(event: BaseEventModel, session: AsyncSession) -> Mapping
         location=event.location.dict()
         )
     session.add(table_entry)
-    return {"status": "OK", "id": table_entry.id, 
-        "result": EventModel.from_orm(table_entry)}
+
+    return EventStatusModel(status="OK", id=table_entry.id, 
+        result=EventModel.from_orm(table_entry))
 
 
 async def delete_event_dao(event_id: str, session: AsyncSession):
@@ -66,7 +68,8 @@ async def delete_event_dao(event_id: str, session: AsyncSession):
     return {"status": "OK", "id": parsed_id.hex, "affected": result_rowcount}
 
 
-async def get_event_list_dao(list_param: ListParameters, session: AsyncSession):
+async def get_event_list_dao(list_param: ListParameters, 
+    session: AsyncSession) -> EventListStatusModel:
     """
     Get an event list in a JSON format
 
@@ -78,9 +81,10 @@ async def get_event_list_dao(list_param: ListParameters, session: AsyncSession):
     query = select(Event)
     result = await session.execute(query)
     resp_list = [EventModel.from_orm(r).json() for r in result]
-    return {"status":"OK", "rows": resp_list, "row_count": len(resp_list)}
+    return EventListStatusModel(status="OK", rows=resp_list, row_count=len(resp_list))
 
-async def get_event_dao(event_id: str, session: AsyncSession):
+async def get_event_dao(event_id: str, 
+    session: AsyncSession) -> EventStatusModel:
     """
     Get event detail of one event
 
@@ -96,4 +100,4 @@ async def get_event_dao(event_id: str, session: AsyncSession):
         resp = EventModel.from_orm(result[0])
     else:
         raise ValueError
-    return {"status": "OK", "result": resp.json()}
+    return EventStatusModel(status="OK", id=resp.id, result=resp)

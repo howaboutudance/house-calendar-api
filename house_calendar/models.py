@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Optional, Text
+from typing import List, Optional, Text
 from datetime import datetime, timedelta
 from pydantic import BaseModel, validator
 from pydantic.fields import Field
@@ -33,7 +33,7 @@ class BaseEventModel(ORMBaseModel):
     start_date: datetime = Field(None, description="Start time and date of the event")
     end_date: datetime = Field(None, description="End time and date of the event")
     duration: timedelta = Field(None, description="Duration (in seconds)")
-    location: LocationModel
+    location: Optional[LocationModel]
     @validator('duration', pre=True, always=True)
     def default_duration(cls, v, *, values, **kwargs):
       return v or values['end_date'] - values['start_date']
@@ -42,6 +42,21 @@ class EventModel(BaseEventModel):
     start_date: datetime = Field( 
         default=datetime.now(),
         description="Start time and date of the event")
+
+class StatusBaseModel(BaseModel):
+    status: str
+
+
+class EventListStatusModel(StatusBaseModel):
+    rows: List[EventModel]
+    row_count: int
+
+class EventStatusModel(StatusBaseModel):
+    id: UUID4
+    result: EventModel
+
+class ErrorStatusModel(StatusBaseModel):
+    error: str
 
 class Status(BaseModel):
     alive:  Optional[bool] = Field(True)
