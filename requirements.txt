@@ -1,6 +1,5 @@
 fastapi
 uvicorn[standard]
-aiokafka ~= 0.7.2
 alembic ~= 1.5
 asyncpg ~= 0.24
 psycopg2-binary
