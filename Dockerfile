@@ -12,11 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.9 as source 
+FROM ghcr.io/howaboutudance/hematite/python-base:3.10 as base
+RUN dnf install python-devel gcc -y --nodocs --setopt install_weak_deps=False && \
+    dnf clean all -y
+
+FROM base as source
 WORKDIR /app
 COPY ./requirements.txt ./
 COPY ./setup.py ./ README.md ./
-RUN pip3 install -r requirements.txt
+RUN pip3 install setuptools wheel && \
+    pip3 install -r requirements.txt
 COPY ./house_calendar/. ./house_calendar
 
 FROM source as test
@@ -29,13 +34,24 @@ FROM source as builder
 RUN pip3 install wheel
 RUN python setup.py bdist_wheel
 
-FROM python:3.9-slim as app
-RUN apt-get update && apt-get -y install libpq-dev gcc && pip install psycopg2
-COPY --from=builder /app/dist ./app/dist
+FROM ghcr.io/howaboutudance/hematite/python-slim:3.10 as app
+RUN microdnf install -y libpq-devel gcc python-devel \
+     --nodocs --setopt install_weak_deps=0 && \
+     pip install psycopg2
+COPY --from=builder /app/dist/. /app/dist/
 WORKDIR /app
 RUN pip3 install dist/house_calendar*
 ENV HOST_SERVER 0.0.0.0
+ENV HOST_PORT 8000
+ENTRYPOINT [ "python", "-m", "house_calendar" ]
+
+FROM ghcr.io/howaboutudance/hematite/python-slim as init
+RUN microdnf install python3-alembic python3-psycopg2 -y --nodocs --setopt install_weak_deps=0 && \
+    microdnf clean all -y
+COPY --from=builder /app/dist/. /app/dist/
+WORKDIR /app
+RUN pip3 install dist/house_calendar*
 ENV POSTGRES_MIGRATE_URI postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/hc_events
 COPY ./alembic.ini .
 COPY ./alembic/. ./alembic/
-CMD alembic upgrade heads && python -m house_calendar
+ENTRYPOINT [ "alembic", "upgrade", "heads" ]
