@@ -1,28 +1,17 @@
 #!/bin/bash
 set +e
 
-#Checks if network exists
-#TODO: #7 parameterize network name
-if [ "$(podman network exists house-calendar-backend)" == "1" ] ; then
-  podman network create house-calendar-backend
-fi
+NETWORK_NAME=house-calendar-events
 
-#TODO: Parameterize yaml file name for podman yaml defitnition
-#TODO: Investigate: pod setup with shell script
-if [ "$(podman pod ps |grep -E "api_pod|phppgadmin_pod|db" | wc -l)" == "0" ] ; then
-  echo "> > > Starting PostgreSQL, house_calendar and phppgadmin"
-  podman play kube --network=house-calendar-backend scripts/pods/backend.yaml
-else
-  echo "Development pod is already running. Re-create it? Y/N"
-  read input
-  # TODO: Fix to hand yes and y cass
-  if [ $input == "Y" ] ; then
-    podman pod rm api_pod -f
-    podman pod rm phppgadmin_pod -f
-    podman pod rm db -f
-    podman play kube --network=house-calendar-backend scripts/pods/backend.yaml
-  else
-    echo "Leaving bootstrap process."
-    exit 0
-  fi
-fi
+podman network create ${NETWORK_NAME}
+
+podman pod create \
+  --network=${NETWORK_NAME} \
+  -n postgres \
+  -p 5432:5432 \
+
+podman run -dt --pod postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_DB=hc_events \
+  docker.io/postgres

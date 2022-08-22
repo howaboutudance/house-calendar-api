@@ -30,7 +30,8 @@ async def test_post_event_valid_entry(event_post_fixture, async_client, db_sessi
   test_event = event_post_fixture
   #TODO: update after changing parsing of EventModel to handle uuid -> string
   expected_resp_keys = set(["id"])
-  resp = await async_client.post("/events/", json=test_event)
+  async with async_client as client:
+    resp = await client.post("/events/", json=test_event)
   assert resp.status_code == 200
   
   resp_json = resp.json()
@@ -39,24 +40,30 @@ async def test_post_event_valid_entry(event_post_fixture, async_client, db_sessi
 
 
 async def test_delete_event_invalid(async_client, db_session):
-  resp = await async_client.delete("/events/100")
+  async with async_client as client:
+    resp = await client.delete("/events/100")
   assert resp.status_code == 404
 
 
 async def test_delete_event_valid(async_client, db_session, event_with_uuid_fixture):
-  add_event = await async_client.post("/events/", json=event_with_uuid_fixture)
+  async with async_client as client:
+    add_event = await client.post("/events/", json=event_with_uuid_fixture)
   assert add_event.status_code == 200
   add_event_json = add_event.json()
   assert is_uuid(add_event_json["id"])
 
-  resp = await async_client.delete("/events/{id}".format(id=add_event_json["id"]))
+  async with async_client as client:
+    resp = await client.delete("/events/{id}".format(id=add_event_json["id"]))
+
   assert resp.status_code == 200
 
   resp_json = resp.json()
   assert 1 >= resp_json["affected"]
 
-async def test_get_event(caplog, async_client, db_session, event_with_uuid_fixture):
-  add_event = await async_client.post("/events/", json=event_with_uuid_fixture)
+async def test_get_event(caplog, async_client, event_with_uuid_fixture, db_session):
+  async with async_client as client:
+    add_event = await client.post("/events/", json=event_with_uuid_fixture)
+
   assert add_event.status_code == 200
   add_event_uuid = add_event.json()["id"]
   assert is_uuid(add_event_uuid)
@@ -68,6 +75,7 @@ async def test_get_event(caplog, async_client, db_session, event_with_uuid_fixtu
   assert "result" in resp_json
 
 async def test_get_event_list(async_client, db_session):
-  resp = await async_client.get("/events/")
+  async with async_client as client:
+    resp = await client.get("/events/")
   assert resp.status_code == 200
   assert len(resp.json()) > 0
