@@ -57,4 +57,4 @@ class DB_CONFIG():
     if "POSTGRES_URI" in os.environ:
         ENGINE_URI = os.environ.get("POSTGRES_URI")
     else:
-        ENGINE_URI = "postgresql+asyncpg://admin:500boylston@127.0.0.1:5432/house_calendar_events"
+        ENGINE_URI = "postgresql+asyncpg://postgres:postgres@127.0.0.1:5432/hc_events"
