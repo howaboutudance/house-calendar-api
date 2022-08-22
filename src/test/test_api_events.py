@@ -48,12 +48,11 @@ async def test_delete_event_invalid(async_client, db_session):
 async def test_delete_event_valid(async_client, db_session, event_with_uuid_fixture):
   async with async_client as client:
     add_event = await client.post("/events/", json=event_with_uuid_fixture)
-  assert add_event.status_code == 200
-  add_event_json = add_event.json()
-  assert is_uuid(add_event_json["id"])
+    add_event_json = add_event.json()
 
-  async with async_client as client:
     resp = await client.delete("/events/{id}".format(id=add_event_json["id"]))
+  assert add_event.status_code == 200
+  assert is_uuid(add_event_json["id"])
 
   assert resp.status_code == 200
 
@@ -63,12 +62,12 @@ async def test_delete_event_valid(async_client, db_session, event_with_uuid_fixt
 async def test_get_event(caplog, async_client, event_with_uuid_fixture, db_session):
   async with async_client as client:
     add_event = await client.post("/events/", json=event_with_uuid_fixture)
+    add_event_uuid = add_event.json()["id"]
+    resp = await client.get(f"/events/{add_event_uuid}")
 
   assert add_event.status_code == 200
-  add_event_uuid = add_event.json()["id"]
   assert is_uuid(add_event_uuid)
 
-  resp = await async_client.get(f"/events/{add_event_uuid}")
   assert resp.status_code == 200
   resp_json = resp.json()
   assert "error" not in resp_json
