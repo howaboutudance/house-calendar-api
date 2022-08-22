@@ -1,6 +1,3 @@
-import pytest
-import asyncio
-from typing import Generator, Callable
 # Copyright 2021 Michael Penhallegon 
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,6 +12,9 @@ from typing import Generator, Callable
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
+import asyncio
+from typing import Generator, Callable
 from sqlalchemy.ext.asyncio import AsyncSession
 from house_calendar.db.session import engine, async_session
 from house_calendar.db.table_models import Base
