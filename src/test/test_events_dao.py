@@ -13,11 +13,20 @@
 # limitations under the License.
 
 import pytest
+from sqlalchemy.ext.asyncio import AsyncSession
 from house_calendar.routers.events_dao import add_event_dao, delete_event_dao, get_event_list_dao
 from house_calendar.models import EventModel
 from house_calendar.dependencies import ListParameters
 
 pytestmark = pytest.mark.asyncio
+
+@pytest.mark.asyncio
+async def test_db_session_fixture(db_session: AsyncSession):
+    from sqlalchemy import select
+    from house_calendar.db.table_models import Event
+
+    res = await db_session.execute(select(Event))
+    assert 0 == len(res.fetchall())
 
 async def test_add_event_dao(caplog, event_dao_fixture, db_session):
     test_session = db_session

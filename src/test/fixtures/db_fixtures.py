@@ -13,8 +13,8 @@
 # limitations under the License.
 
 import pytest
-import asyncio
-from typing import Generator, Callable
+import pytest_asyncio
+from typing import AsyncGenerator, Generator, Callable
 from sqlalchemy.ext.asyncio import AsyncSession
 from house_calendar.db.session import engine, async_session
 from house_calendar.db.table_models import Base
@@ -31,15 +31,21 @@ def mock_session():
     return MockSession()
 
 
-@pytest.fixture()
-async def db_session() -> AsyncSession:
+@pytest_asyncio.fixture(scope="session")
+async def db_engine() -> AsyncSession:
     async with engine.begin() as connection:
-        await connection.run_sync(Base.metadata.drop_all)
-        await connection.run_sync(Base.metadata.create_all)
-        async with async_session(bind=connection) as session:
-            yield session
-            await session.flush()
-            await session.rollback()
+        await connection.run_sync(Base.metadata.drop_all) # type: ignore 
+        await connection.run_sync(Base.metadata.create_all) # type: ignore 
+        session = async_session(bind=connection, expire_on_commit=False)
+        return session
+
+@pytest_asyncio.fixture(autouse=True)
+async def db_session() -> AsyncGenerator[AsyncSession, None]:
+    async with async_session() as session:
+        yield session
+
+    await session.flush()
+    await session.rollback()
 
 
 @pytest.fixture()
@@ -51,9 +57,9 @@ def override_get_db(db_session: AsyncSession) -> Callable:
 
 
 @pytest.fixture()
-def app(override_get_db: Callable) -> FastAPI:
+def app(override_get_db: Callable) -> FastAPI: #type: ignore
     from house_calendar.db import get_db
-    from house_calendar.api import app
+    from house_calendar.api import app # type: ignore
 
-    app.dependency_overrides[get_db] = override_get_db
-    return app
+    app.dependency_overrides[get_db] = override_get_db # type: ignore
+    return app # type: ignore
