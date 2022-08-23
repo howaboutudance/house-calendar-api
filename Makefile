@@ -44,8 +44,12 @@ alembic-init:
 run:
 	./scripts/local-run.sh
 
-local-test: .PHONY
-	poetry run tox -e py39-unit
+test: check .PHONY
+	poetry run tox -e py310-unit
+	poetry run isort src/house_calendar
+
+check:
+	poetry run mypy src/house_calendar src/test
 
 done: .PHONY
 	(\
