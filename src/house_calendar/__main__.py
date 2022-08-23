@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import uvicorn
 import os
 
+import uvicorn
 
 if "HOST_SERVER" in os.environ and "HOST_PORT" in os.environ:
     host_ip = os.environ["HOST_SERVER"]

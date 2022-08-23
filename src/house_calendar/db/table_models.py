@@ -13,12 +13,12 @@
 # limitations under the License.
 
 import uuid
-
 from typing import Text
+
 from sqlalchemy import Column
-from sqlalchemy.dialects.postgresql import UUID, JSONB
-from sqlalchemy.orm import as_declarative, declared_attr
-from sqlalchemy.sql.sqltypes import DateTime, String, Integer
+from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.orm import as_declarative, declared_attr  # type: ignore
+from sqlalchemy.sql.sqltypes import DateTime, Integer, String
 
 
 @as_declarative()

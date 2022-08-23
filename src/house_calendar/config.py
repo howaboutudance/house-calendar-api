@@ -12,15 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import house_calendar
 import logging
 import os
 import sys
-
-from datetime import datetime as Datetime
 from dataclasses import dataclass
-from uvicorn import __version__ as uvicorn_version
+from datetime import datetime as Datetime
+
 from fastapi import __version__ as fastapi_version
+from uvicorn import __version__ as uvicorn_version
+
+import house_calendar
 
 log = logging.getLogger(__name__)
 

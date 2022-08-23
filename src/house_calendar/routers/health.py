@@ -13,7 +13,8 @@
 # limitations under the License.
 
 from fastapi import APIRouter, Request
-from fastapi.responses import PlainTextResponse, JSONResponse
+from fastapi.responses import JSONResponse, PlainTextResponse
+
 from ..models import Status
 
 router = APIRouter(tags=["health"])

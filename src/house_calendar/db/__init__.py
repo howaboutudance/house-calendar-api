@@ -12,4 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .session import engine, get_db, async_session
+from .session import async_session, engine, get_db

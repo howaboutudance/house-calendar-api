@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Union, List, Dict, Text
 from datetime import datetime as DateTime
+from typing import Dict, List, Text, Union
 from uuid import UUID
+
 ## Tyoe Definitions
 JSONSingleton = Union[Text, int, float, bool]
 JSONType = Union[JSONSingleton, List['JSONType'], Dict[Text, 'JSONType']] # type: ignore

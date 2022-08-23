@@ -12,14 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from typing import AsyncGenerator
+
+from sqlalchemy.ext.asyncio import (AsyncEngine, AsyncSession,
+                                    create_async_engine)
+from sqlalchemy.orm import sessionmaker
 
 from ..config import DB_CONFIG
 
-engine = create_async_engine(DB_CONFIG.ENGINE_URI, future=True, echo=True)
-async_session = sessionmaker(engine, class_=AsyncSession, 
+engine: AsyncEngine = create_async_engine(DB_CONFIG.ENGINE_URI, future=True, echo=True)
+async_session: AsyncSession = sessionmaker(engine, class_=AsyncSession, 
         expire_on_commit=False)
 
 

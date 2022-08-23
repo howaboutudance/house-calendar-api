@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Callable, MutableMapping, Text, List
 from datetime import datetime
-from .models import EventModel
+from typing import Callable, List, MutableMapping, Text
 
+from .models import EventModel
 from .util import JSONType
+
 DB = "house-calendar"
 EVENT_COLLECTION = "events"
 

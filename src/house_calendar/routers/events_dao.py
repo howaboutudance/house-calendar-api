@@ -17,14 +17,15 @@ events_dao create a series of function that models the Data Access Object
 Pattern.
 """
 import uuid
+from typing import Any, Mapping
 
-from typing import Mapping, Any
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.sql.expression import delete, select
 
-from ..db.table_models import Event
-from ..models import BaseEventModel, EventListStatusModel, EventStatusModel, EventModel
-from ..dependencies import ListParameters
+from house_calendar.db.table_models import Event
+from house_calendar.dependencies import ListParameters
+from house_calendar.models import (BaseEventModel, EventListStatusModel,
+                                   EventModel, EventStatusModel)
 
 
 async def add_event_dao(event: BaseEventModel, 

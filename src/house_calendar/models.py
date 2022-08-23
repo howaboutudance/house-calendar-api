@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List, Optional, Text
 from datetime import datetime, timedelta
+from typing import List, Optional, Text
+
 from pydantic import BaseModel, validator
 from pydantic.fields import Field
 from pydantic.types import UUID4
+
 from .config import APP_CONFIG
+
 
 class ORMBaseModel(BaseModel):
     class Config(BaseModel.Config): #type: ignore

@@ -13,26 +13,19 @@
 # limitations under the License.
 
 import logging
-
-from fastapi import Depends, APIRouter, Response, status
-from fastapi.responses import JSONResponse
-from sqlalchemy.ext.asyncio.session import AsyncSession
 from typing import List, Union
 
+from fastapi import APIRouter, Depends, Response, status
+from fastapi.responses import JSONResponse
+from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.sql.sqltypes import JSON
 
-from .events_dao import (
-    delete_event_dao, 
-    add_event_dao, 
-    get_event_list_dao, 
-    get_event_dao)
 from ..db.session import get_db
 from ..dependencies import ListParameters
-from ..models import (
-    BaseEventModel,
-    EventListStatusModel,
-    EventStatusModel,
-    ErrorStatusModel)
+from ..models import (BaseEventModel, ErrorStatusModel, EventListStatusModel,
+                      EventStatusModel)
+from .events_dao import (add_event_dao, delete_event_dao, get_event_dao,
+                         get_event_list_dao)
 
 router = APIRouter(prefix="/events", tags=["events"])
 

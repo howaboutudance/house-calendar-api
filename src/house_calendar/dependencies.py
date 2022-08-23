@@ -13,7 +13,9 @@
 # limitations under the License.
 
 from typing import Optional, Text
+
 from fastapi.param_functions import Query
+
 
 class ListParameters:
     def __init__(self, q: Optional[Text] = Query(None), offset: int = 0, 
