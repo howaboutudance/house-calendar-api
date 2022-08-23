@@ -23,7 +23,7 @@ async def test_async_client_create():
     assert r.status_code == 200
 
 @pytest.mark.asyncio
-async def test_async_client_fixutre(async_client):
+async def test_async_client_fixture(async_client):
     
     async with async_client as client:
         r = await client.get("http://localhost/docs")
