@@ -1,4 +1,3 @@
-#!/usr/bin/bash
 # Copyright 2021-2022 Michael Penhallegon 
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set +e
+from typing import Optional, Text
 
-podman pod rm api_pod -f
-podman pod rm phppgadmin_pod -f
-podman pod rm db -f
+from fastapi.param_functions import Query
+
+
+class ListParameters:
+    def __init__(self, q: Optional[Text] = Query(None), offset: int = 0, 
+        limit: int = 1000):
+        self.q = q, 
+        self.offset = offset
+        self.limit =  offset + limit

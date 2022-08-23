@@ -1,4 +1,3 @@
-#!/usr/bin/bash
 # Copyright 2021-2022 Michael Penhallegon 
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set +e
+from httpx import AsyncClient
+from house_calendar.api import app
+import pytest
 
-podman pod rm api_pod -f
-podman pod rm phppgadmin_pod -f
-podman pod rm db -f
+@pytest.mark.asyncio
+async def test_async_client_create():
+    async with AsyncClient(app=app) as ac:
+        r = await ac.get("http://localhost/docs")
+    assert r.status_code == 200
+
+@pytest.mark.asyncio
+async def test_async_client_fixture(async_client):
+    
+    async with async_client as client:
+        r = await client.get("http://localhost/docs")
+        r.status_code = 200

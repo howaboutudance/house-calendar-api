@@ -1,0 +1,50 @@
+
+[tool.poetry]
+name = "house_calendar"
+version = "0.1.0"
+description = "A microservice to provide CRUD action on house calendar events"
+authors = ["Michael Penhallegon <mike@hematite.tech>"]
+license = "Apache-2.0"
+packages = [
+    {include="house_calendar", from="src", format="wheel"}
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "0.70.1"
+alembic = "1.7.5"
+psycopg2-binary = "2.9.3"
+asyncpg = "0.25.0"
+uvicorn = {extras = ["standard"], version = "0.16.0"}
+SQLAlchemy = "^1.4.40"
+
+[tool.poetry.dev-dependencies]
+pytest = "6.2.5"
+pytest-cov = "3.0.0"
+httpx = "0.21.1"
+mypy = "^0.971"
+wheel = "^0.37.1"
+safety = "^2.1.1"
+requests = "^2.28.1"
+ipdb = "^0.13.9"
+tox = "^3.25.1"
+pytest-asyncio = "^0.19.0"
+isort = "^5.10.1"
+
+[tool.mypy]
+python_version="3.8"
+exclude="venv*"
+
+[[tool.mypy.overrides]]
+module = [
+    "uvicorn",
+    "sqlalchemy",
+    "sqlalchemy.*",
+    "house_calendar.db.table_models",
+    "conftest"
+]
+ignore_missing_imports=true
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

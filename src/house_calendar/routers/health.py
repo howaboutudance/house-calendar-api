@@ -1,4 +1,3 @@
-#!/usr/bin/bash
 # Copyright 2021-2022 Michael Penhallegon 
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set +e
+from fastapi import APIRouter, Request
+from fastapi.responses import JSONResponse, PlainTextResponse
 
-podman pod rm api_pod -f
-podman pod rm phppgadmin_pod -f
-podman pod rm db -f
+from ..models import Status
+
+router = APIRouter(tags=["health"])
+
+@router.get("/pulse")
+async def get_pulse() -> PlainTextResponse:
+    return PlainTextResponse("OK") 
+
+@router.get("/status")
+async def get_status() -> Status:
+    return Status()
+
+@router.get("/metrics")
+async def get_metrics(request: Request) -> JSONResponse:
+    return JSONResponse({"status": "ok", 
+    "client": {'address': request.client}})

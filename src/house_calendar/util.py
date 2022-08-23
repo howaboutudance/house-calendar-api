@@ -1,4 +1,3 @@
-#!/usr/bin/bash
 # Copyright 2021-2022 Michael Penhallegon 
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set +e
+from datetime import datetime as DateTime
+from typing import Dict, List, Text, Union
+from uuid import UUID
 
-podman pod rm api_pod -f
-podman pod rm phppgadmin_pod -f
-podman pod rm db -f
+## Tyoe Definitions
+JSONSingleton = Union[Text, int, float, bool]
+JSONType = Union[JSONSingleton, List['JSONType'], Dict[Text, 'JSONType']] # type: ignore
+
+def create_iso_date(*args) -> Text:
+    return DateTime(*args).isoformat()
+
+def is_uuid(id: str) -> bool:
+    try:
+        UUID(id)
+        return True
+    except TypeError:
+        return False

@@ -1,4 +1,3 @@
-#!/usr/bin/bash
 # Copyright 2021-2022 Michael Penhallegon 
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set +e
+import pytest
 
-podman pod rm api_pod -f
-podman pod rm phppgadmin_pod -f
-podman pod rm db -f
+def test_event_valid(event_valid_fixture):
+    test_event = event_valid_fixture
+    test_event_dict = test_event.dict()
+    assert test_event_dict["duration"].seconds == 18000

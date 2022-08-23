@@ -1,4 +1,3 @@
-#!/usr/bin/bash
 # Copyright 2021-2022 Michael Penhallegon 
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set +e
+import pytest
+from house_calendar import config
 
-podman pod rm api_pod -f
-podman pod rm phppgadmin_pod -f
-podman pod rm db -f
+def test_config_db_config():
+    assert isinstance(config.DB_CONFIG.ENGINE_URI, str)
+    assert "postgres" in config.DB_CONFIG.ENGINE_URI
+    assert "5432" in config.DB_CONFIG.ENGINE_URI
