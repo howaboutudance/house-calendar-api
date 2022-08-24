@@ -11,18 +11,18 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.10"
-fastapi = "0.70.1"
-alembic = "1.7.5"
-psycopg2-binary = "2.9.3"
-asyncpg = "0.25.0"
-uvicorn = {extras = ["standard"], version = "0.16.0"}
+fastapi = "^0.80.0"
+alembic = "^1.8.1"
+psycopg2-binary = "^2.9.3"
+asyncpg = "^0.25.0"
+uvicorn = {extras = ["standard"], version = "^0.16.0"}
 SQLAlchemy = "^1.4.40"
 dynaconf = "^3.1.9"
 
 [tool.poetry.dev-dependencies]
-pytest = "6.2.5"
-pytest-cov = "3.0.0"
-httpx = "0.21.1"
+pytest = "^6.2.5"
+pytest-cov = "^3.0.0"
+httpx = "^0.21.1"
 mypy = "^0.971"
 wheel = "^0.37.1"
 safety = "^2.1.1"
@@ -43,6 +43,7 @@ module = [
     "sqlalchemy",
     "sqlalchemy.*",
     "house_calendar.db.table_models",
+    "dynaconf",
     "conftest"
 ]
 ignore_missing_imports=true
