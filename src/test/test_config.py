@@ -14,8 +14,21 @@
 
 import pytest
 from house_calendar import config
+from dynaconf import base
 
-def test_config_db_config():
-    assert isinstance(config.DB_CONFIG.ENGINE_URI, str)
-    assert "postgres" in config.DB_CONFIG.ENGINE_URI
-    assert "5432" in config.DB_CONFIG.ENGINE_URI
+def test_dynaconf_settings():
+    assert isinstance(config.settings, base.LazySettings)
+
+def test_dynaconf_setting_var():
+    assert "test_var" == config.settings.test_var
+
+def test_postgres_uri_var_exists():
+    assert "POSTGRES_URI" in config.settings
+    assert str(config.settings.postgres_uri).startswith("postgresql+asyncpg://")
+
+def test_origins_var_exists():
+    assert "ORIGINS" in config.settings
+    assert isinstance(config.settings.origins, list)
+    assert all([
+        (url.startswith("http://") or url.startswith("https://"))
+        for url in config.settings.origins])

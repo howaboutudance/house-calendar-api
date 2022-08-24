@@ -18,9 +18,9 @@ from sqlalchemy.ext.asyncio import (AsyncEngine, AsyncSession,
                                     create_async_engine)
 from sqlalchemy.orm import sessionmaker
 
-from ..config import DB_CONFIG
+from house_calendar import config
 
-engine: AsyncEngine = create_async_engine(DB_CONFIG.ENGINE_URI, future=True, echo=True)
+engine: AsyncEngine = create_async_engine(config.settings.postgres_uri, future=True, echo=True)
 async_session: AsyncSession = sessionmaker(engine, class_=AsyncSession, 
         expire_on_commit=False)
 

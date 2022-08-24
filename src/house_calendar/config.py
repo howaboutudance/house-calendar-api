@@ -18,12 +18,19 @@ import sys
 from dataclasses import dataclass
 from datetime import datetime as Datetime
 
+from dynaconf import Dynaconf
 from fastapi import __version__ as fastapi_version
 from uvicorn import __version__ as uvicorn_version
 
 import house_calendar
 
 log = logging.getLogger(__name__)
+
+settings = Dynaconf(
+    envvar_prefix="HOUSE_CALENDAR_EVENTS",
+    settings_files=['settings.toml', '.secrets.toml'],
+    environments=True
+)
 
 
 @dataclass(frozen=True)
@@ -40,11 +47,7 @@ class APP_CONFIG():
 
     PYTHON_VERSION = (lambda vers: f"{vers.major}.{vers.minor}.{vers.micro}")(sys.version_info)
 
-    ORIGINS = [
-        "http://localhost",
-        "http://localhost:3000"
-    ]
-
+    ORIGINS = settings.origins 
     UVICORN_VERSION = uvicorn_version
     FASTAPI_VERSION = fastapi_version
     SYS_VERSION = sys.version
@@ -52,10 +55,3 @@ class APP_CONFIG():
     def get_openapi_name(cls):
         return f"House Music Calendar API {cls.HOUSE_CALENDAR_VERSION} on Python {cls.PYTHON_VERSION} - uvicorn {uvicorn_version}"
     
-
-@dataclass(frozen=True)
-class DB_CONFIG():
-    if "POSTGRES_URI" in os.environ:
-        ENGINE_URI = os.environ.get("POSTGRES_URI")
-    else:
-        ENGINE_URI = "postgresql+asyncpg://postgres:postgres@127.0.0.1:5432/hc_events"
