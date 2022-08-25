@@ -23,4 +23,4 @@ else:
     host_ip = "127.0.0.1"
     host_port = 8000
 
-uvicorn.run("house_calendar.api:app", host=host_ip, port=host_port)
+uvicorn.run("house_calendar_events.api:app", host=host_ip, port=host_port)

@@ -20,12 +20,15 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.sql.sqltypes import JSON
 
-from ..db.session import get_db
-from ..dependencies import ListParameters
-from ..models import (BaseEventModel, ErrorStatusModel, EventListStatusModel,
-                      EventStatusModel)
-from .events_dao import (add_event_dao, delete_event_dao, get_event_dao,
-                         get_event_list_dao)
+from house_calendar_events.db.session import get_db
+from house_calendar_events.dependencies import ListParameters
+from house_calendar_events.models import (BaseEventModel, ErrorStatusModel,
+                                          EventListStatusModel,
+                                          EventStatusModel)
+from house_calendar_events.routers.events_dao import (add_event_dao,
+                                                      delete_event_dao,
+                                                      get_event_dao,
+                                                      get_event_list_dao)
 
 router = APIRouter(prefix="/events", tags=["events"])
 

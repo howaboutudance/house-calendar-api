@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from httpx import AsyncClient
-from house_calendar.api import app
+from house_calendar_events.api import app
 import pytest
 
 

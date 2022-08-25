@@ -18,7 +18,7 @@ from sqlalchemy.ext.asyncio import (AsyncEngine, AsyncSession,
                                     create_async_engine)
 from sqlalchemy.orm import sessionmaker
 
-from house_calendar import config
+from house_calendar_events import config
 
 engine: AsyncEngine = create_async_engine(
     config.settings.postgres_uri, future=True, echo=True

@@ -22,7 +22,7 @@ from dynaconf import Dynaconf
 from fastapi import __version__ as fastapi_version
 from uvicorn import __version__ as uvicorn_version
 
-import house_calendar
+import house_calendar_events
 
 log = logging.getLogger(__name__)
 
@@ -37,9 +37,9 @@ settings = Dynaconf(
 class APP_CONFIG:
     START_TIME = Datetime.isoformat(Datetime.now())
 
-    if "__version__" in dir(house_calendar):
+    if "__version__" in dir(house_calendar_events):
         try:
-            HOUSE_CALENDAR_VERSION = house_calendar.__version__
+            HOUSE_CALENDAR_VERSION = house_calendar_events.__version__
         except AttributeError:
             HOUSE_CALENDAR_VERSION = "dev"
         finally:

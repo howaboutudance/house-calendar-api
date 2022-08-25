@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from house_calendar import models as items
+from house_calendar_events import models as items
 from datetime import datetime, timedelta
 import pytest
-from house_calendar.models import EventModel, LocationModel
-from house_calendar.util import create_iso_date
+from house_calendar_events.models import EventModel, LocationModel
+from house_calendar_events.util import create_iso_date
 
 
 @pytest.fixture()
