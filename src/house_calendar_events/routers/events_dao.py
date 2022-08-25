@@ -22,10 +22,10 @@ from typing import Any, Mapping
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.sql.expression import delete, select
 
-from house_calendar.db.table_models import Event
-from house_calendar.dependencies import ListParameters
-from house_calendar.models import (BaseEventModel, EventListStatusModel,
-                                   EventModel, EventStatusModel)
+from house_calendar_events.db.table_models import Event
+from house_calendar_events.dependencies import ListParameters
+from house_calendar_events.models import (BaseEventModel, EventListStatusModel,
+                                          EventModel, EventStatusModel)
 
 
 async def add_event_dao(
@@ -63,7 +63,7 @@ async def delete_event_dao(event_id: str, session: AsyncSession):
     :returns: status, id parsed as string, and number of rows affected
     """
     parsed_id = uuid.UUID(event_id)
-    query = delete(Event).where(Event.id == parsed_id)
+    query = delete(Event).where(Event.id == parsed_id)  # type: ignore
     result = await session.execute(query)
     result_rowcount: int = result.rowcount  # type: ignore
     if result_rowcount == 0:
@@ -82,7 +82,7 @@ async def get_event_list_dao(
 
     :returns: status, list of event entries and row_count
     """
-    query = select(Event)
+    query = select(Event)  # type: ignore
     result = await session.execute(query)
     resp_list = [EventModel.from_orm(r).json() for r in result]
     return EventListStatusModel(status="OK", rows=resp_list, row_count=len(resp_list))
@@ -98,7 +98,7 @@ async def get_event_dao(event_id: str, session: AsyncSession) -> EventStatusMode
     :returns: status and result
     """
     parsed_id = uuid.UUID(event_id)
-    query = select(Event).where(Event.id == parsed_id)
+    query = select(Event).where(Event.id == parsed_id)  # type: ignore
     result = (await session.execute(query)).one()
     if len(result) == 1:
         resp = EventModel.from_orm(result[0])

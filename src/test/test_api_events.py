@@ -15,7 +15,7 @@
 from typing import Awaitable
 import pytest
 import uuid
-from house_calendar.util import is_uuid
+from house_calendar_events.util import is_uuid
 
 
 pytestmark = pytest.mark.asyncio

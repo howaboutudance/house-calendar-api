@@ -16,8 +16,8 @@ import pytest
 import pytest_asyncio
 from typing import AsyncGenerator, Generator, Callable
 from sqlalchemy.ext.asyncio import AsyncSession
-from house_calendar.db.session import engine, async_session
-from house_calendar.db.table_models import Base
+from house_calendar_events.db.session import engine, async_session
+from house_calendar_events.db.table_models import Base
 from fastapi import FastAPI
 
 
@@ -61,8 +61,8 @@ def override_get_db(db_session: AsyncSession) -> Callable:
 
 @pytest.fixture()
 def app(override_get_db: Callable) -> FastAPI:  # type: ignore
-    from house_calendar.db import get_db
-    from house_calendar.api import app  # type: ignore
+    from house_calendar_events.db import get_db
+    from house_calendar_events.api import app  # type: ignore
 
     app.dependency_overrides[get_db] = override_get_db  # type: ignore
     return app  # type: ignore

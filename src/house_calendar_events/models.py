@@ -19,7 +19,7 @@ from pydantic import BaseModel, validator
 from pydantic.fields import Field
 from pydantic.types import UUID4
 
-from .config import APP_CONFIG
+from house_calendar_events.config import APP_CONFIG
 
 
 class ORMBaseModel(BaseModel):

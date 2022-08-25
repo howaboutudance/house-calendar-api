@@ -14,13 +14,13 @@
 
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
-from house_calendar.routers.events_dao import (
+from house_calendar_events.routers.events_dao import (
     add_event_dao,
     delete_event_dao,
     get_event_list_dao,
 )
-from house_calendar.models import EventModel
-from house_calendar.dependencies import ListParameters
+from house_calendar_events.models import EventModel
+from house_calendar_events.dependencies import ListParameters
 
 pytestmark = pytest.mark.asyncio
 
@@ -28,9 +28,9 @@ pytestmark = pytest.mark.asyncio
 @pytest.mark.asyncio
 async def test_db_session_fixture(db_session: AsyncSession):
     from sqlalchemy import select
-    from house_calendar.db.table_models import Event
+    from house_calendar_events.db.table_models import Event
 
-    res = await db_session.execute(select(Event))
+    res = await db_session.execute(select(Event))  # type: ignore
     assert 0 == len(res.fetchall())
 
 

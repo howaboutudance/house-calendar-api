@@ -20,10 +20,8 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
-from house_calendar.routers import events
-
-from .config import APP_CONFIG
-from .routers import events, health
+from house_calendar_events.config import APP_CONFIG
+from house_calendar_events.routers import events, health
 
 app = FastAPI(title="House Music Calendar", version=APP_CONFIG.HOUSE_CALENDAR_VERSION)
 app.include_router(health.router)
