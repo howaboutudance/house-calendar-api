@@ -1,11 +1,11 @@
-# Copyright 2021-2022 Michael Penhallegon 
-# 
+# Copyright 2021-2022 Michael Penhallegon
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,7 +22,7 @@ from sqlalchemy.sql.sqltypes import DateTime, Integer, String
 
 
 @as_declarative()
-class Base():
+class Base:
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     __name__: str
 

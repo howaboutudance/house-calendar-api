@@ -1,11 +1,11 @@
-# Copyright 2021-2022 Michael Penhallegon 
-# 
+# Copyright 2021-2022 Michael Penhallegon
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,13 +28,13 @@ log = logging.getLogger(__name__)
 
 settings = Dynaconf(
     envvar_prefix="HOUSE_CALENDAR_EVENTS",
-    settings_files=['settings.toml', '.secrets.toml'],
-    environments=True
+    settings_files=["settings.toml", ".secrets.toml"],
+    environments=True,
 )
 
 
 @dataclass(frozen=True)
-class APP_CONFIG():
+class APP_CONFIG:
     START_TIME = Datetime.isoformat(Datetime.now())
 
     if "__version__" in dir(house_calendar):
@@ -45,13 +45,15 @@ class APP_CONFIG():
         finally:
             log.info(f"using {HOUSE_CALENDAR_VERSION}")
 
-    PYTHON_VERSION = (lambda vers: f"{vers.major}.{vers.minor}.{vers.micro}")(sys.version_info)
+    PYTHON_VERSION = (lambda vers: f"{vers.major}.{vers.minor}.{vers.micro}")(
+        sys.version_info
+    )
 
-    ORIGINS = settings.origins 
+    ORIGINS = settings.origins
     UVICORN_VERSION = uvicorn_version
     FASTAPI_VERSION = fastapi_version
     SYS_VERSION = sys.version
+
     @classmethod
     def get_openapi_name(cls):
         return f"House Music Calendar API {cls.HOUSE_CALENDAR_VERSION} on Python {cls.PYTHON_VERSION} - uvicorn {uvicorn_version}"
-    

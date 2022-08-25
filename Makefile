@@ -49,6 +49,7 @@ test: check .PHONY
 
 check:
 	poetry run mypy src/house_calendar src/test
+	poetry run black src
 	poetry run isort src/house_calendar
 	poetry run safety check
 
