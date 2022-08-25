@@ -46,10 +46,12 @@ run:
 
 test: check .PHONY
 	poetry run tox -e py310-unit
-	poetry run isort src/house_calendar
 
 check:
 	poetry run mypy src/house_calendar src/test
+	poetry run black src
+	poetry run isort src/house_calendar
+	poetry run safety check
 
 done: .PHONY
 	(\

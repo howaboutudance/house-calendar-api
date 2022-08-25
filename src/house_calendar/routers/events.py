@@ -1,11 +1,11 @@
-# Copyright 2021-2022 Michael Penhallegon 
-# 
+# Copyright 2021-2022 Michael Penhallegon
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,23 +31,28 @@ router = APIRouter(prefix="/events", tags=["events"])
 
 log = logging.getLogger(__name__)
 
+
 @router.post("/")
 async def add_event(event: BaseEventModel, session: AsyncSession = Depends(get_db)):
-    result = await add_event_dao(event, session) 
+    result = await add_event_dao(event, session)
     return result
 
+
 @router.get("/{id}", response_model=EventStatusModel)
-async def get_event(id: str,
-    session: AsyncSession = Depends(get_db)) -> Union[EventStatusModel, ErrorStatusModel]:
+async def get_event(
+    id: str, session: AsyncSession = Depends(get_db)
+) -> Union[EventStatusModel, ErrorStatusModel]:
     try:
         resp = await get_event_dao(id, session)
         return resp
     except ValueError as e:
-       return ErrorStatusModel(error=e, status="ERROR")
+        return ErrorStatusModel(error=e, status="ERROR")
+
 
 @router.delete("/{id}")
-async def delete_event(id: str, response: Response,
-    session: AsyncSession = Depends(get_db)) -> JSONResponse:
+async def delete_event(
+    id: str, response: Response, session: AsyncSession = Depends(get_db)
+) -> JSONResponse:
     try:
         action_response = await delete_event_dao(id, session)
         return JSONResponse(action_response, status_code=200)
@@ -57,9 +62,11 @@ async def delete_event(id: str, response: Response,
 
 
 @router.get("/")
-async def get_event_list(response: Response,
-    list_parameters: ListParameters= Depends(ListParameters),
-    session: AsyncSession = Depends(get_db))-> Union[EventListStatusModel, ErrorStatusModel]:
+async def get_event_list(
+    response: Response,
+    list_parameters: ListParameters = Depends(ListParameters),
+    session: AsyncSession = Depends(get_db),
+) -> Union[EventListStatusModel, ErrorStatusModel]:
     """
     Get Events List (with querying)
     """
