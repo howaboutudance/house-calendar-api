@@ -1,7 +1,7 @@
 
 [tool.poetry]
 name = "house_calendar_events"
-version = "0.1.0"
+version = "0.8.0"
 description = "A microservice to provide CRUD action on house calendar events"
 authors = ["Michael Penhallegon <mike@hematite.tech>"]
 license = "Apache-2.0"
