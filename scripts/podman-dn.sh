@@ -15,6 +15,12 @@
 
 set +e
 
-podman pod rm api_pod -f
-podman pod rm phppgadmin_pod -f
-podman pod rm db -f
+NETWORK_NAME=house-calendar-events
+
+if podman network exists ${NETWORK_NAME}; then
+    podman pod kill postgres
+    podman pod rm postgres -f
+    podman network rm ${NETWORK_NAME}
+else
+    echo "${NETWORK_NAME} does not exists... exiting..."
+fi

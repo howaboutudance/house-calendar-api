@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-BASE_TAG = hematite/house-calendar
+BASE_TAG = hematite/house-calendar-events
 TEST_TAG = ${BASE_TAG}-test
-APP_TAG = ${BASE_TAG}-api
+APP_TAG = ${BASE_TAG}
 INIT_TAG = ${BASE_TAG}-init
 CR_REGISTRY = ghcr.io/howaboutudance
 APP_REPO_TAG =  ${CR_REGISTRY}/${APP_TAG}
@@ -30,15 +30,19 @@ init-env: .PHONY
 	pip3 install poetry
 	poetry update
 
-build: api-image alembic-init
+build: api-publish alembic-publish
 api-image: .PHONY
 	${DOCKER_BUILD} --target=app -t ${APP_TAG}
 	${DOCKER_TAG} ${APP_TAG} ${APP_REPO_TAG}
+
+api-publish: api-image
 	${DOCKER_PUSH} ${APP_REPO_TAG}
 
 alembic-init:
 	${DOCKER_BUILD} --target=init -t ${INIT_TAG}
 	${DOCKER_TAG} ${INIT_TAG} ${INIT_REPO_TAG}
+
+alembic-publish: alembic-init
 	${DOCKER_PUSH} ${INIT_REPO_TAG}
 
 run:

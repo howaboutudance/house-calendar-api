@@ -30,6 +30,7 @@ settings = Dynaconf(
     envvar_prefix="HOUSE_CALENDAR_EVENTS",
     settings_files=["settings.toml", ".secrets.toml"],
     environments=True,
+    
 )
 
 

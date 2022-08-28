@@ -1,13 +1,14 @@
 
 [tool.poetry]
 name = "house_calendar_events"
-version = "0.8.0"
+version = "0.8.2"
 description = "A microservice to provide CRUD action on house calendar events"
 authors = ["Michael Penhallegon <mike@hematite.tech>"]
 license = "Apache-2.0"
 packages = [
-    {include="house_calendar_events", from="src", format="wheel"}
+    {include="house_calendar_events/**/*.py", from="src", format="wheel"},
 ]
+include=["config/*.toml"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
