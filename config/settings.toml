@@ -10,5 +10,4 @@ postgres_uri = "postgresql+asyncpg://postgres:postgres@127.0.0.1:5432/hc_events"
 origins = ["http://localhost", "http://localhost:3000"]
 
 [ci]
-postgres_uri = "postgresql+asyncpg://postgres:postgres@127.0.0.1:5432/hc_events"
 origins = ["http://localhost", "http://localhost:3000"]
