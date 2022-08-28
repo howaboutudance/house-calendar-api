@@ -21,7 +21,6 @@ WORKDIR /app
 COPY ./pyproject.toml ./ README.md ./ ./poetry.lock ./
 RUN pip3 install poetry && poetry install --no-dev
 COPY ./src/house_calendar_events/. ./src/house_calendar_events
-COPY ./config/ ./
 
 FROM source as builder
 RUN set +x && poetry build -f wheel && ls /app/dist
@@ -34,7 +33,8 @@ COPY --from=builder /app/dist/. /app/dist/
 WORKDIR /app
 RUN set +x && pip3 install dist/house_calendar_events*
 ENV ENV_FOR_DYNACONF=ci
-CMD python -m house_calendar_events
+ENV DEBUG_LEVEL_FOR_DYNACONF=DEBUG
+ENTRYPOINT [ "python", "-m", "house_calendar_events" ]
 
 FROM ghcr.io/howaboutudance/hematite/python-slim as init
 RUN microdnf install python3-alembic python3-psycopg2 -y --nodocs --setopt install_weak_deps=0 && \
