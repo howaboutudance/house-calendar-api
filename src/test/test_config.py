@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import pytest
-from house_calendar import config
+from house_calendar_events import config
 from dynaconf import base
 
 

@@ -1,12 +1,12 @@
 
 [tool.poetry]
-name = "house_calendar"
+name = "house_calendar_events"
 version = "0.8.1"
 description = "A microservice to provide CRUD action on house calendar events"
 authors = ["Michael Penhallegon <mike@hematite.tech>"]
 license = "Apache-2.0"
 packages = [
-    {include="house_calendar", from="src", format="wheel"}
+    {include="house_calendar_events", from="src", format="wheel"}
 ]
 
 [tool.poetry.dependencies]
@@ -35,15 +35,14 @@ pytest-dotenv = "^0.5.2"
 black = "^22.6.0"
 
 [tool.mypy]
-python_version="3.8"
-exclude="venv*"
+python_version="3.10"
 
 [[tool.mypy.overrides]]
 module = [
     "uvicorn",
     "sqlalchemy",
     "sqlalchemy.*",
-    "house_calendar.db.table_models",
+    "house_calendar_events.db.table_models",
     "dynaconf",
     "conftest"
 ]

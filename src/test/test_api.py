@@ -15,7 +15,7 @@
 import pytest
 
 from unittest.mock import patch
-from house_calendar.api import app
+from house_calendar_events.api import app
 from fastapi.testclient import TestClient
 
 
