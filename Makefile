@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-BASE_TAG = hematite/house-calendar
+BASE_TAG = hematite/house-calendar-events
 TEST_TAG = ${BASE_TAG}-test
-APP_TAG = ${BASE_TAG}-api
+APP_TAG = ${BASE_TAG}
 INIT_TAG = ${BASE_TAG}-init
 CR_REGISTRY = ghcr.io/howaboutudance
 APP_REPO_TAG =  ${CR_REGISTRY}/${APP_TAG}

@@ -1,4 +1,4 @@
-# Copyright 2021 Michael Penhallegon 
+# Copyright 2021-2022 Michael Penhallegon 
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,21 +18,12 @@ RUN dnf install python-devel gcc -y --nodocs --setopt install_weak_deps=False &&
 
 FROM base as source
 WORKDIR /app
-COPY ./requirements.txt ./
-COPY ./setup.py ./ README.md ./
-RUN pip3 install setuptools wheel && \
-    pip3 install -r requirements.txt
-COPY ./house_calendar/. ./house_calendar
-
-FROM source as test
-COPY ./test ./test
-COPY ./tox.ini ./ ./requirements-dev.txt ./
-RUN pip3 install -r requirements-dev.txt
-CMD tox -e py38 && mypy house_calendar/
+COPY ./pyproject.toml ./ README.md ./ ./poetry.lock ./
+RUN pip3 install poetry && poetry install --no-dev
+COPY ./src/house_calendar_events/. ./src/house_calendar_events
 
 FROM source as builder
-RUN pip3 install wheel
-RUN python setup.py bdist_wheel
+RUN set +x && poetry build -f wheel && ls /app/dist
 
 FROM ghcr.io/howaboutudance/hematite/python-slim:3.10 as app
 RUN microdnf install -y libpq-devel gcc python-devel \
@@ -40,17 +31,17 @@ RUN microdnf install -y libpq-devel gcc python-devel \
      pip install psycopg2
 COPY --from=builder /app/dist/. /app/dist/
 WORKDIR /app
-RUN pip3 install dist/house_calendar*
+RUN set +x && pip3 install dist/house_calendar_events*
 ENV HOST_SERVER 0.0.0.0
 ENV HOST_PORT 8000
-ENTRYPOINT [ "python", "-m", "house_calendar" ]
+CMD python -m house_calendar_events
 
 FROM ghcr.io/howaboutudance/hematite/python-slim as init
 RUN microdnf install python3-alembic python3-psycopg2 -y --nodocs --setopt install_weak_deps=0 && \
     microdnf clean all -y
 COPY --from=builder /app/dist/. /app/dist/
 WORKDIR /app
-RUN pip3 install dist/house_calendar*
+RUN set +x && pip3 install dist/house_calendar_events*
 ENV POSTGRES_MIGRATE_URI postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/hc_events
 COPY ./alembic.ini .
 COPY ./alembic/. ./alembic/
