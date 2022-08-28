@@ -21,6 +21,7 @@ WORKDIR /app
 COPY ./pyproject.toml ./ README.md ./ ./poetry.lock ./
 RUN pip3 install poetry && poetry install --no-dev
 COPY ./src/house_calendar_events/. ./src/house_calendar_events
+COPY ./config/ ./
 
 FROM source as builder
 RUN set +x && poetry build -f wheel && ls /app/dist
@@ -32,8 +33,7 @@ RUN microdnf install -y libpq-devel gcc python-devel \
 COPY --from=builder /app/dist/. /app/dist/
 WORKDIR /app
 RUN set +x && pip3 install dist/house_calendar_events*
-ENV HOST_SERVER 0.0.0.0
-ENV HOST_PORT 8000
+ENV ENV_FOR_DYNACONF=ci
 CMD python -m house_calendar_events
 
 FROM ghcr.io/howaboutudance/hematite/python-slim as init
@@ -42,7 +42,8 @@ RUN microdnf install python3-alembic python3-psycopg2 -y --nodocs --setopt insta
 COPY --from=builder /app/dist/. /app/dist/
 WORKDIR /app
 RUN set +x && pip3 install dist/house_calendar_events*
-ENV POSTGRES_MIGRATE_URI postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/hc_events
+COPY ./config/ ./
 COPY ./alembic.ini .
 COPY ./alembic/. ./alembic/
+ENV ENV_FOR_DYNACONF=ci
 ENTRYPOINT [ "alembic", "upgrade", "heads" ]
