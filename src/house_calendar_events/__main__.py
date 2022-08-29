@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from house_calendar_events import config
-
 import uvicorn
 
-uvicorn.run("house_calendar_events.api:app",
+from house_calendar_events import config
+
+uvicorn.run(
+    "house_calendar_events.api:app",
     host=config.settings.host_server,
-    port=config.settings.host_port)
+    port=config.settings.host_port,
+)
