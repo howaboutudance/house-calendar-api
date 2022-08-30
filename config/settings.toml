@@ -14,4 +14,4 @@ origins = ["http://localhost", "http://localhost:3000"]
 
 [ci]
 origins = ["http://localhost", "http://localhost:3000"]
-postgres_server_ip = "alembic-postgres.dns.podman:5432"
+postgres_server_ip = "postgres.dns.podman:5432"

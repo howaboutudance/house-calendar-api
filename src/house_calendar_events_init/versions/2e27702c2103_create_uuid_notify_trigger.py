@@ -10,14 +10,15 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '2e27702c2103'
-down_revision = '3e93b8e5c168'
+revision = "2e27702c2103"
+down_revision = "3e93b8e5c168"
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
-    op.execute("""
+    op.execute(
+        """
     CREATE OR REPLACE FUNCTION push_event_function()
     RETURNS trigger
     LANGUAGE plpgsql AS
@@ -30,14 +31,17 @@ def upgrade():
             RETURN NEW;
         END;
     $body$;
-    """)
-    op.execute("""
+    """
+    )
+    op.execute(
+        """
     CREATE TRIGGER push_event_id
         AFTER INSERT
         ON event
         FOR EACH ROW
         EXECUTE FUNCTION push_event_function();
-    """)
+    """
+    )
 
 
 def downgrade():

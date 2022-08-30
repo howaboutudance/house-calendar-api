@@ -8,6 +8,7 @@ from sqlalchemy import pool
 from alembic import context
 from house_calendar_events import config
 from house_calendar_events.db.table_models import *
+
 log = logging.getLogger(__name__)
 
 # this is the Alembic Config object, which provides
@@ -15,7 +16,6 @@ log = logging.getLogger(__name__)
 config_context = context.config
 config_context.set_main_option("sqlalchemy.url", config.settings.alembic_uri)
 log.info(f"setting url to {config.settings.alembic_uri}")
-
 
 
 # Interpret the config file for Python logging.
@@ -72,9 +72,7 @@ def run_migrations_online():
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
