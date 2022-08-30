@@ -20,6 +20,8 @@ NETWORK_NAME=house-calendar-events
 if podman network exists ${NETWORK_NAME}; then
     podman pod kill postgres
     podman pod rm postgres -f
+    podman pod kill alembic-init
+    podman pod rm alembic-init -f
     podman network rm ${NETWORK_NAME}
 else
     echo "${NETWORK_NAME} does not exists... exiting..."

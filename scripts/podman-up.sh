@@ -29,3 +29,13 @@ podman run -dt --pod postgres \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_DB=hc_events \
   docker.io/postgres
+
+sleep 5
+
+podman pod create \
+    --network=${NETWORK_NAME} \
+    -n alembic-init
+
+podman run --pod alembic-init \
+    -v ./config/:/app/config/:z \
+    localhost/hematite/house-calendar-events-init

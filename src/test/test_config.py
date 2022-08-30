@@ -39,3 +39,9 @@ def test_origins_var_exists():
             for url in config.settings.origins
         ]
     )
+
+
+def test_alembic_uri_formatted():
+    expected = "postgresql+psycopg2://postgres:postgres@127.0.0.1:5432/hc_events"
+    assert "ALEMBIC_URI" in config.settings
+    assert expected == config.settings.alembic_uri

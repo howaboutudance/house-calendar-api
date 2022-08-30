@@ -42,8 +42,7 @@ RUN microdnf install python3-alembic python3-psycopg2 -y --nodocs --setopt insta
 COPY --from=builder /app/dist/. /app/dist/
 WORKDIR /app
 RUN set +x && pip3 install dist/house_calendar_events*
-COPY ./config/ ./
 COPY ./alembic.ini .
-COPY ./alembic/. ./alembic/
+COPY ./src/house_calendar_events_init/. ./src/house_calendar_events_init/
 ENV ENV_FOR_DYNACONF=ci
 ENTRYPOINT [ "alembic", "upgrade", "heads" ]
