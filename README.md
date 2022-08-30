@@ -13,13 +13,19 @@ checks and statuses.
 
 ## Satus & Health Check Endpoints
 
+| Method  | Endpoint    | Description                        |
+|---------|-------------|------------------------------------|
+| `GET`   | /pulse/     | Basic binary canary "OK" if good   |
+| `GET`   | /status/    | Status response                    |
+
 ## Event CRUD Endpoints
 
-| Method | Endpoint    | Description                        |
-|--------|-------------|------------------------------------|
-| `GET`  | /event/     | A listing of events                |
-| `GET`  | /event/{id} | Get individual event by uuid       |
-| `POST` | /event/     | Create new event entry             |
+| Method  | Endpoint    | Description                        |
+|---------|-------------|------------------------------------|
+| `GET`   | /event/     | A listing of events                |
+| `POST`  | /event/     | Create new event entry             |
+| `GET`   | /event/{id} | Get individual event by uuid       |
+| `DELETE`| /event/{id} | Delete individual event by uuid    | 
 
 # Local Development Environment
 
@@ -27,4 +33,8 @@ checks and statuses.
 
 ## Alembic Migrations Rollout
 
+## Intialization
+
 # Project Structure
+
+# Development Workflow
