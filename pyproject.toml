@@ -1,7 +1,7 @@
 
 [tool.poetry]
 name = "house_calendar_events"
-version = "0.8.2"
+version = "0.8.3"
 description = "A microservice to provide CRUD action on house calendar events"
 authors = ["Michael Penhallegon <mike@hematite.tech>"]
 license = "Apache-2.0"
@@ -23,7 +23,7 @@ dynaconf = "^3.1.9"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
 pytest-cov = "^3.0.0"
-httpx = "^0.23"
+httpx = "^0.23.0"
 mypy = "^0.971"
 wheel = "^0.37.1"
 safety = "^2.1.1"
@@ -34,6 +34,7 @@ pytest-asyncio = "^0.19.0"
 isort = "^5.10.1"
 pytest-dotenv = "^0.5.2"
 black = "^22.6.0"
+flake8 = "^5.0.4"
 
 [tool.mypy]
 python_version="3.10"
