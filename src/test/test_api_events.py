@@ -18,7 +18,7 @@ import uuid
 from house_calendar_events.util import is_uuid
 
 
-pytestmark = pytest.mark.asyncio
+pytestmark = [pytest.mark.asyncio]
 
 
 async def test_post_event_invalid_entry(async_client):
@@ -26,6 +26,7 @@ async def test_post_event_invalid_entry(async_client):
     assert resp.status_code == 422
 
 
+@pytest.mark.integration
 async def test_post_event_valid_entry(event_post_fixture, async_client, db_session):
     test_event = event_post_fixture
     # TODO: update after changing parsing of EventModel to handle uuid -> string
@@ -45,6 +46,7 @@ async def test_delete_event_invalid(async_client, db_session):
     assert resp.status_code == 404
 
 
+@pytest.mark.integration
 async def test_delete_event_valid(async_client, db_session, event_with_uuid_fixture):
     async with async_client as client:
         add_event = await client.post("/events/", json=event_with_uuid_fixture)
@@ -60,6 +62,7 @@ async def test_delete_event_valid(async_client, db_session, event_with_uuid_fixt
     assert 1 >= resp_json["affected"]
 
 
+@pytest.mark.integration
 async def test_get_event(caplog, async_client, event_with_uuid_fixture, db_session):
     async with async_client as client:
         add_event = await client.post("/events/", json=event_with_uuid_fixture)

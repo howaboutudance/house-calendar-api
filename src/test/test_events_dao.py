@@ -41,6 +41,7 @@ async def test_add_event_dao(caplog, event_dao_fixture, db_session):
     assert type(result.result) is EventModel
 
 
+@pytest.mark.integration
 async def test_delete_event_dao(caplog, event_dao_fixture, db_session):
     test_session = db_session
     test_event = event_dao_fixture
