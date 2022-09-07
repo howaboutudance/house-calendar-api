@@ -16,16 +16,20 @@
 events_dao create a series of function that models the Data Access Object
 Pattern.
 """
+import json
+import logging
 import uuid
 from typing import Any, Mapping
 
+from pydantic.error_wrappers import ValidationError
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.sql.expression import delete, select
 
 from house_calendar_events.db.table_models import Event
 from house_calendar_events.dependencies import ListParameters
-from house_calendar_events.models import (BaseEventModel, EventListStatusModel,
-                                          EventModel, EventStatusModel)
+from house_calendar_events.models import (BaseEventModel, ErrorStatusModel,
+                                          EventListStatusModel, EventModel,
+                                          EventStatusModel)
 
 
 async def add_event_dao(
@@ -45,6 +49,7 @@ async def add_event_dao(
         location=event.location.dict(),  # type: ignore
     )
     session.add(table_entry)
+    await session.flush()
 
     return EventStatusModel(
         status="OK", id=table_entry.id, result=EventModel.from_orm(table_entry)
@@ -84,8 +89,12 @@ async def get_event_list_dao(
     """
     query = select(Event)  # type: ignore
     result = await session.execute(query)
-    resp_list = [EventModel.from_orm(r).json() for r in result]
-    return EventListStatusModel(status="OK", rows=resp_list, row_count=len(resp_list))
+    try:
+        resp = [EventModel.from_orm(r) for r in result]
+        return EventListStatusModel(rows=resp, row_count=len(resp))
+    except ValidationError as e:
+        logging.info(e)
+        return EventListStatusModel(rows=[], row_count=0)
 
 
 async def get_event_dao(event_id: str, session: AsyncSession) -> EventStatusModel:
@@ -102,6 +111,4 @@ async def get_event_dao(event_id: str, session: AsyncSession) -> EventStatusMode
     result = (await session.execute(query)).one()
     if len(result) == 1:
         resp = EventModel.from_orm(result[0])
-    else:
-        raise ValueError
     return EventStatusModel(status="OK", id=resp.id, result=resp)

@@ -46,7 +46,7 @@ def run_migrations_offline():
     script output.
 
     """
-    url = config_context.get_main_option("sqlalchemy.url")
+    url = config.settings.alembic_uri
     context.configure(
         url=url,
         target_metadata=target_metadata,

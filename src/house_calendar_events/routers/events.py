@@ -73,10 +73,9 @@ async def get_event_list(
     """
     Get Events List (with querying)
     """
-    filter_keys = ["name", "start_date", "end_date", "id", "location"]
-    try:
-        resp = await get_event_list_dao(list_parameters, session)
-        return resp
-    except ValueError as e:
-        response.status_code = status.HTTP_404_NOT_FOUND
-        return ErrorStatusModel(status="ERROR", error=str(e))
+    # try:
+    resp = await get_event_list_dao(list_parameters, session)
+    return resp
+    # except ValueError as e:
+    #     response.status_code = status.HTTP_404_NOT_FOUND
+    #     return ErrorStatusModel(status="ERROR", error=str(e))

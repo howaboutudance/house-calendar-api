@@ -37,12 +37,16 @@ class BaseEventModel(ORMBaseModel):
     name: Text = Field(..., max_length=300)
     start_date: datetime = Field(None, description="Start time and date of the event")
     end_date: datetime = Field(None, description="End time and date of the event")
-    duration: timedelta = Field(None, description="Duration (in seconds)")
+    duration: Optional[timedelta] = Field(
+        0,
+        description="Duration (in seconds)",
+    )
     location: Optional[LocationModel]
 
     @validator("duration", pre=True, always=True)
     def default_duration(cls, v, *, values, **kwargs):
-        return v or values["end_date"] - values["start_date"]
+        duration = values["end_date"] - values["start_date"]
+        return v or duration.seconds
 
 
 class EventModel(BaseEventModel):

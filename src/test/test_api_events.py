@@ -51,6 +51,7 @@ async def test_delete_event_valid(async_client, db_session, event_with_uuid_fixt
     async with async_client as client:
         add_event = await client.post("/events/", json=event_with_uuid_fixture)
         add_event_json = add_event.json()
+        assert is_uuid(add_event_json["id"])
 
         resp = await client.delete("/events/{id}".format(id=add_event_json["id"]))
     assert add_event.status_code == 200
@@ -78,8 +79,9 @@ async def test_get_event(caplog, async_client, event_with_uuid_fixture, db_sessi
     assert "result" in resp_json
 
 
-async def test_get_event_list(async_client, db_session):
+async def test_get_event_list(async_client, db_session, event_with_uuid_fixture):
     async with async_client as client:
+        await client.post("/events/", json=event_with_uuid_fixture)
         resp = await client.get("/events/")
     assert resp.status_code == 200
     assert len(resp.json()) > 0

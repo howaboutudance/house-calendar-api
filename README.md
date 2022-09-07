@@ -119,4 +119,7 @@ After configuration in the terminal call:
 make test
 ```
 
-To test the code against the service dependencies.
+To test the code against the service dependencies, run:
+```
+./scripts/podman-up.sh && poetry run pytest -s
+```
