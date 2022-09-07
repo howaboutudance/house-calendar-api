@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import uuid
-from typing import Text
+from typing import Optional, Text
 
 from sqlalchemy import Column
 from sqlalchemy.dialects.postgresql import JSONB, UUID
