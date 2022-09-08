@@ -6,6 +6,7 @@ postgres_server_credentials="postgres:postgres"
 postgres_base_uri = "@format {this.postgres_server_credentials}@{this.postgres_server_ip}/{this.postgres_server_db}" 
 alembic_uri = "@format postgresql+psycopg2://{this.postgres_base_uri}"
 postgres_uri = "@format postgresql+asyncpg://{this.postgres_base_uri}"
+psycopg2_uri = "@format postgresql://{this.postgres_base_uri}"
 origins = []
 host_server="0.0.0.0"
 host_port=8000

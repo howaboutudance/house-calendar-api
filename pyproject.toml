@@ -46,6 +46,7 @@ module = [
     "sqlalchemy.*",
     "house_calendar_events.db.table_models",
     "dynaconf",
+    "psycopg2",
     "conftest"
 ]
 ignore_missing_imports=true
