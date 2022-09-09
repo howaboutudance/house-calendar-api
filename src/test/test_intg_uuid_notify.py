@@ -1,11 +1,13 @@
+import json
 import pytest
+import uuid
+
 from house_calendar_events.config import settings
 from psycopg2 import connect
 
 pytestmark = pytest.mark.integration
 
 
-@pytest.mark.asyncio
 def test_psycopg2_notify():
 
     conn = connect(settings.psycopg2_uri)
@@ -55,6 +57,13 @@ async def test_add_new_event_notify():
     cursor.execute("TRUNCATE event;")
     assert popped
     assert popped.channel == "event_id_feed"
-    conn.notifies.clear()
+    notify_json = json.loads(popped.payload)
+    assert "id" in notify_json
+    assert "name" in notify_json
 
-    assert 0 < len(add_event_result) < 2
+    # will fail with ValueError if failed
+    assert uuid.UUID(notify_json["id"], version=4)
+
+    assert "test event" == notify_json["name"]
+
+    conn.notifies.clear()
