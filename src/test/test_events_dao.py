@@ -22,7 +22,7 @@ from house_calendar_events.routers.events_dao import (
 from house_calendar_events.models import EventModel
 from house_calendar_events.dependencies import ListParameters
 
-pytestmark = pytest.mark.asyncio
+pytestmark = [pytest.mark.asyncio, pytest.mark.integration]
 
 
 @pytest.mark.asyncio

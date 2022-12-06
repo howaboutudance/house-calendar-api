@@ -1,7 +1,7 @@
 
 [tool.poetry]
 name = "house_calendar_events"
-version = "0.8.4"
+version = "0.8.5"
 description = "A microservice to provide CRUD action on house calendar events"
 authors = ["Michael Penhallegon <mike@hematite.tech>"]
 license = "Apache-2.0"
@@ -19,13 +19,14 @@ asyncpg = "^0.25.0"
 uvicorn = {extras = ["standard"], version = "^0.16.0"}
 SQLAlchemy = "^1.4.40"
 dynaconf = "^3.1.9"
+py = "^1.11.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
 pytest-cov = "^3.0.0"
 httpx = "^0.23.0"
 mypy = "^0.971"
-wheel = "^0.37.1"
+wheel = "^0.38.1"
 safety = "^2.1.1"
 requests = "^2.28.1"
 ipdb = "^0.13.9"
