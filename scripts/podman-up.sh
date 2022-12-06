@@ -30,7 +30,7 @@ podman run -dt --pod postgres \
   -e POSTGRES_DB=hc_events \
   docker.io/postgres
 
-sleep 5
+sleep 10
 
 podman pod create \
     --network=${NETWORK_NAME} \

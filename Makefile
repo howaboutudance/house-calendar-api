@@ -19,14 +19,14 @@ INIT_TAG = ${BASE_TAG}-init
 CR_REGISTRY = ghcr.io/howaboutudance
 APP_REPO_TAG =  ${CR_REGISTRY}/${APP_TAG}
 INIT_REPO_TAG = ${CR_REGISTRY}/${INIT_TAG}
-DOCKER_BUILD=docker build ./ -f Dockerfile
+DOCKER_BUILD=podman build ./ -f Dockerfile
 DOCKER_PUSH=docker push
-DOCKER_TAG=docker tag
+DOCKER_TAG=podman tag
 DOCKER_RUN=docker run
 VENV_VERSION_FOLDER := venv$(shell python3 --version | sed -ne 's/[^0-9]*\(\([0-9]*\.\)\{0,2\}\).*/\1/p' | sed -e "s/\.//g")
 
 init-env: .PHONY
-	pyenv local system 3.9.8 3.8.12 3.7.12
+	pyenv local system 3.10.8 3.9.15 3.8.15
 	pip3 install poetry
 	poetry update
 
