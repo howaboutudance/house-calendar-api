@@ -55,13 +55,13 @@ check:
 	poetry run mypy src/house_calendar_events/ src/test
 	poetry run black src
 	poetry run isort src/house_calendar_events
-	poetry run safety check
+	poetry run safety check -i 51457
 
-done: .PHONY
+done: run test .PHONY
 	(\
-		./scripts/deps-up.sh; \
-		poetry run tox -e done; \
-		./scripts/deps-dn.sh; \
+		poetry run tox -e py310-intergration; \
+		./scripts/podman-dn.sh; \
+		podman pod stop app && podman pod rm app; \
 	)
 dev:
 	poetry run uvicorn house_calendar.main:app --reload
