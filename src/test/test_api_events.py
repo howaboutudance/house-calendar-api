@@ -78,7 +78,7 @@ async def test_get_event(caplog, async_client, event_with_uuid_fixture, db_sessi
     assert "error" not in resp_json
     assert "result" in resp_json
 
-
+@pytest.mark.integration
 async def test_get_event_list(async_client, db_session, event_with_uuid_fixture):
     async with async_client as client:
         await client.post("/events/", json=event_with_uuid_fixture)
