@@ -46,9 +46,12 @@ async def add_event_dao(
         name=event.name,
         start_date=event.start_date,
         end_date=event.end_date,
+        duration=event.duration,
         location=event.location.dict(),  # type: ignore
     )
+
     session.add(table_entry)
+    await session.commit()
     await session.flush()
 
     return EventStatusModel(

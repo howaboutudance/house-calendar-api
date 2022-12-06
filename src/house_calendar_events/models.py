@@ -37,7 +37,7 @@ class BaseEventModel(ORMBaseModel):
     name: Text = Field(..., max_length=300)
     start_date: datetime = Field(None, description="Start time and date of the event")
     end_date: datetime = Field(None, description="End time and date of the event")
-    duration: Optional[timedelta] = Field(
+    duration: Optional[int] = Field(
         0,
         description="Duration (in seconds)",
     )

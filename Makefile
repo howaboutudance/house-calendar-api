@@ -64,6 +64,10 @@ done: run test .PHONY
 		podman pod stop app && podman pod rm app; \
 	)
 dev:
-	poetry run uvicorn house_calendar.main:app --reload
+	(\
+		cd src; \
+		poetry run uvicorn house_calendar_events.api:app --reload; \
+		cd ../; \
+	)
 
 .PHONY:
