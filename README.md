@@ -2,14 +2,14 @@
 
 ## Purpose
 
-house_calendar_events is a the microservice to wrap and abstract the event db
+house-calendar-events is a microservice to wrap and abstract the event db
 postgres database. It handles basic CRUD interaction with Event and Locations.
 It is part of a wider House Calendar web application.
 
 There are two python packages that lead to two containers:
-- house_calendar_event 
+- house_calendar_events 
     - A microservice containing wrapping the event database
-- house_calendar_event_init
+- house_calendar_events_init
     - Setups and configures the alembic models inside a postgres database
 
 ## Endpoints
@@ -78,7 +78,7 @@ flowchart TB
     end
     A --> p
     B --> m
-    A -.-> k[/ihouse_calendar_new_event_uuid/] -.->B;
+    A -.-> k[/ihouse_calendar_producer/] -.->B;
     end
 
 
@@ -109,7 +109,7 @@ env to `testing` and few values need to be set in a `config/.secrets.toml`
 
 As an example:
 ```toml
-# inside .secrets.toml
+# inside secrets.toml
 [testing]
 postgres_server_credentials="postgres:postgres"
 ```
