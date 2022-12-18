@@ -55,7 +55,7 @@ check:
 	poetry run mypy src/house_calendar_events/ src/test
 	poetry run black src
 	poetry run isort src/house_calendar_events
-	poetry run safety check -i 51457
+	poetry run safety check -i 51457 -i 51668
 
 done: run test .PHONY
 	(\
