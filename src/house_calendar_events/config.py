@@ -28,7 +28,7 @@ log = logging.getLogger(__name__)
 
 settings = Dynaconf(
     envvar_prefix="HOUSE_CALENDAR_EVENTS",
-    settings_files=["settings.toml", ".secrets.toml"],
+    settings_files=["settings.toml", "secrets.toml"],
     environments=True,
 )
 
